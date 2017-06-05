@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mokuhyooo</title>
-    <%= csrf_meta_tags %>
-
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <title>mokuhyoo</title>
+    <%= render 'layouts/rails_default' %>
+    <%= render 'layouts/shim' %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <script type="text/javascript">
+      $(function(){
+        $('.alert').delay(2500).fadeOut(500);
+      });
+    </script>
   </head>
 
   <body>
-    <%= yield %>
+    <%= render 'layouts/header' %>
+    <div class="container">
+      <div id="flash-message">
+        <%flash.each do |message_type, message|%>
+          <div class="alert alert-<%=message_type%>"><%=message.html_safe%></div>
+        <%end%>
+      </div>
+      <%= yield %>
+      <%= debug(params) if Rails.env.development? %>
+    </div>
   </body>
 </html>

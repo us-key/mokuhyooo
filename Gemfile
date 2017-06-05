@@ -14,6 +14,15 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 
+gem 'bootstrap-sass',          '3.3.6'
+
+gem 'dotenv-rails'
+
+# OAuth
+gem 'devise', '4.2'
+gem 'omniauth', '~> 1.3', '>= 1.3.1'
+gem 'omniauth-twitter', '~> 1.2', '>= 1.2.1'
+
 group :development, :test do
   gem 'sqlite3', '1.3.11'
   gem 'byebug',  '9.0.0', platform: :mri
