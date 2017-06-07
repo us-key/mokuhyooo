@@ -18,6 +18,10 @@ gem 'bootstrap-sass',          '3.3.6'
 
 gem 'dotenv-rails'
 
+# jquery datetimepicker
+gem 'momentjs-rails'
+gem 'bootstrap3-datetimepicker-rails'
+
 # OAuth
 gem 'devise', '4.2'
 gem 'omniauth', '~> 1.3', '>= 1.3.1'
