@@ -1,65 +1,103 @@
-<%=react_component('YearMokuhyoBox',
-  data: [
-    {thisyear: "2017"}
-  ]
-)%>
-<%=react_component('WeekMokuhyoBox',
-  data: [
-    {thisweek: "2017/06/07"}
-  ]
-)%>
-<div>日毎</div>
-<!-- TODO あとでreact化 -->
-<table>
-  <thead>
-    <!-- 固定列の日付・目標・振り返りプラス、登録した分の数値目標 -->
-    <tr>
-      <!-- 固定列 -->
-      <th rowspan="2">日付</th>
-      <th rowspan="2">目標</th>
-      <th rowspan="2">振返り</th>
-      <!-- 数値目標列ヘッダ・数値目標数だけrowspan設定 -->
-      <th colspan="3">数値目標<a href="#">目標を追加する</a></th>
-    </tr>
-    <tr>
-      <th>目標A(合計)</th>
-      <th>目標B(平均)</th>
-      <th>目標C(合計)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- 1週間分の行数用意。日曜～土曜？ -->
-    <tr>
-      <!-- 固定列 -->
-      <td>2017/06/09</td>
-      <td>がんばる</td>
-      <td>がんばった</td>
-      <!-- 追加分 -->
-      <td>100</td>
-      <td>20</td>
-      <td>100000</td>
-    </tr>
-    <!-- 目標の進捗表示行。週・月・年 -->
-    <tr>
-      <td colspan="3">目標値/進捗(週)</td>
-      <!-- 追加分 -->
-      <td>100/5%</td>
-      <td>20</td>
-      <td>100000/10%</td>
-    </tr>
-    <tr>
-      <td colspan="3">目標値/進捗(月)</td>
-      <!-- 追加分 -->
-      <td>100/5%</td>
-      <td>20</td>
-      <td>100000/10%</td>
-    </tr>
-    <tr>
-      <td colspan="3">目標値/進捗(年)</td>
-      <!-- 追加分 -->
-      <td>100/5%</td>
-      <td>20</td>
-      <td>100000/10%</td>
-    </tr>
-  </tbody>
-</table>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          年
+        </div>
+        <div class="panel">
+          <%=react_component('YearMokuhyoBox',
+            data: [
+              {thisyear: "2017"}
+            ]
+          )%>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">月</div>
+        <div class="panel">
+          <%=react_component('MonthMokuhyoBox',
+            data: [
+              {thismonth: "2017/06"}
+            ]
+          )%>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">週</div>
+        <div class="panel">
+          <%=react_component('WeekMokuhyoBox',
+            data: [
+              {thisweek: "2017/06/07"}
+            ]
+          )%>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">日毎</div>
+        <!-- TODO あとでreact化 -->
+        <div class="panel">
+          <table>
+            <thead>
+              <!-- 固定列の日付・目標・振り返りプラス、登録した分の数値目標 -->
+              <tr>
+                <!-- 固定列 -->
+                <th rowspan="2">日付</th>
+                <th rowspan="2">目標</th>
+                <th rowspan="2">振返り</th>
+                <!-- 数値目標列ヘッダ・数値目標数だけrowspan設定 -->
+                <th colspan="3">数値目標<a href="#">目標を追加する</a></th>
+              </tr>
+              <tr>
+                <th>目標A(合計)</th>
+                <th>目標B(平均)</th>
+                <th>目標C(合計)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 1週間分の行数用意。日曜～土曜？ -->
+              <tr>
+                <!-- 固定列 -->
+                <td>2017/06/09</td>
+                <td>がんばる</td>
+                <td>がんばった</td>
+                <!-- 追加分 -->
+                <td>100</td>
+                <td>20</td>
+                <td>100000</td>
+              </tr>
+              <!-- 目標の進捗表示行。週・月・年 -->
+              <tr>
+                <td colspan="3">目標値/進捗(週)</td>
+                <!-- 追加分 -->
+                <td>100/5%</td>
+                <td>20</td>
+                <td>100000/10%</td>
+              </tr>
+              <tr>
+                <td colspan="3">目標値/進捗(月)</td>
+                <!-- 追加分 -->
+                <td>100/5%</td>
+                <td>20</td>
+                <td>100000/10%</td>
+              </tr>
+              <tr>
+                <td colspan="3">目標値/進捗(年)</td>
+                <!-- 追加分 -->
+                <td>100/5%</td>
+                <td>20</td>
+                <td>100000/10%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

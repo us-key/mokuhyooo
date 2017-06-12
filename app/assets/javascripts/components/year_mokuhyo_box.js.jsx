@@ -13,12 +13,30 @@ var Mokuhyo = React.createClass({
     var mokuhyoNodes = this.props.data.map(function(mokuhyo) {
       return(
         <div>
-          <p>{mokuhyo.thisyear-1}年の振り返り<a href="#">編集</a></p>
-          <input type="text" className="prevYearmokuhyoInput"/>
-          <p>{mokuhyo.thisyear}年の目標<a href="#">編集</a></p>
-          <input type="text" className="thisYearMokuhyoInput"/>
-          <p>{mokuhyo.thisyear}年の振り返り<a href="#">編集</a></p>
-          <input type="text" className="thisYearmokuhyoInput"/>
+          <div className="panel panel-warning">
+            <div className="panel-heading">
+              <a data-toggle="collapse" href=".prevYear">昨年の振り返り</a> <a href="#">編集</a>
+            </div>
+            <div className="prevYear panel collapse">
+              <textarea className="form-control prevYearReviewInput"/>
+            </div>
+          </div>
+          <div className="panel panel-info">
+            <div className="panel-heading">
+              <a data-toggle="collapse" href=".thisYear">今年の目標({mokuhyo.thisyear})</a> <a href="#">編集</a>
+            </div>
+            <div className="thisYear panel collapse in">
+              <textarea className="form-control thisYearMokuhyoInput"/>
+            </div>
+          </div>
+          <div className="panel panel-success">
+            <div className="panel-heading">
+              <a data-toggle="collapse" href=".thisYearRev">今年の振り返り</a> <a href="#">編集</a>
+            </div>
+            <div className="thisYearRev panel collapse">
+              <textarea className="form-control thisYearReviewInput"/>
+            </div>
+          </div>
         </div>
       );
     });
