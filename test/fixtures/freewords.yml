@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  target_unit: MyString
+  target_review_type: MyString
+  record_date: 2017-06-12
+
+two:
+  user_id: 1
+  target_unit: MyString
+  target_review_type: MyString
+  record_date: 2017-06-12

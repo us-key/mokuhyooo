@@ -6,11 +6,13 @@
           年
         </div>
         <div class="panel">
-          <%=react_component('YearMokuhyoBox',
-            data: [
-              {thisyear: "2017"}
-            ]
+          <!-- TODO あんまちゃんと動かないので勉強してから直す -->
+          <!--
+          <%=react_component(
+            'YearMokuhyoBox',
+            url: '/api/v1/freewords.json'
           )%>
+        -->
         </div>
       </div>
     </div>
@@ -19,9 +21,8 @@
         <div class="panel-heading">月</div>
         <div class="panel">
           <%=react_component('MonthMokuhyoBox',
-            data: [
-              {thismonth: "2017/06"}
-            ]
+            url: '/api/v1/freewords.json',
+            source_date: "2017/06/07"
           )%>
         </div>
       </div>

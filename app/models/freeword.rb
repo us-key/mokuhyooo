@@ -1,0 +1,2 @@
+class Freeword < ApplicationRecord
+end
