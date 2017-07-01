@@ -145,6 +145,13 @@ var FreeWordBox = React.createClass({
       },
       success: function(result) {
         console.log(this.props.prefix+"_Result" + result.message);
+        // 過去のメッセージが再表示されないように一旦すべて消す
+        $('.register_msg').text("");
+        $('.register_msg').show();
+        this.setState({
+          message: result.message
+        });
+        $('.register_msg').delay(1500).fadeOut(500);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -179,6 +186,7 @@ var FreeWordBox = React.createClass({
           <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
           <a href="#"><span className="glyphicon glyphicon-pencil" aria-hidden="true"/></a>
           <a href="#"><span id='register' onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>登録</span></a>
+          <span className="register_msg">{this.state.message}</span>
         </div>
         <div className={panelClass}>
           <textarea id={this.state.com_id}

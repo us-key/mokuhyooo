@@ -1,1 +1,1 @@
-json.set! :message, '更新しました'
+json.set! :message, '登録しました'

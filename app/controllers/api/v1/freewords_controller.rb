@@ -26,7 +26,6 @@ class Api::V1::FreewordsController < ApplicationController
     if params[:id].present? && (@freeword = Freeword.find(params[:id]))
       @freeword.comment = params[:comment]
     else
-      # TODO タイプをもらわなあかん
       @freeword = Freeword.new
       @freeword.comment = params[:comment]
       @freeword.target_unit = params[:target_unit]
