@@ -1,1 +1,3 @@
-json.extract!(@data, :id, :comment)
+if @data.present?
+  json.extract!(@data, :id, :comment)
+end

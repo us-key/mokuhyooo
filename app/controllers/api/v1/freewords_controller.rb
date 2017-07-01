@@ -13,15 +13,28 @@ class Api::V1::FreewordsController < ApplicationController
       record_date: record_date,
       target_unit: target_unit,
       target_review_type: target_review_type)
-    logger.debug("id:" + @data.id.to_s)
-    logger.debug("comment:" + @data.comment)
+    if @data.present?
+      logger.debug("id:" + @data.id.to_s)
+      logger.debug("comment:" + @data.comment)
+    end
 
     render 'index', formats: 'json', handlers: 'jbuilder'
   end
 
   def create
-    @freeword = Freeword.create(freeword_params)
-    render :show, status: created
+    @freeword = nil
+    if params[:id].present? && (@freeword = Freeword.find(params[:id]))
+      @freeword.comment = params[:comment]
+    else
+      # TODO タイプをもらわなあかん
+      @freeword = Freeword.new
+      @freeword.comment = params[:comment]
+      @freeword.target_unit = params[:target_unit]
+      @freeword.target_review_type = params[:target_review_type]
+      @freeword.record_date = Date.parse(params[:record_date])
+    end
+    @freeword.save
+    render 'show', formats: 'json', handlers:'jbuilder'
   end
 
   private

@@ -5,7 +5,7 @@ $(function(){
       previous: "fa fa-arrow-left",
       next: "fa fa-arrow-right"
     }
-  )};
+  });
   $('.datetimepicker').datetimepicker({
     format: "YYYY/MM/DD HH:mm",
     icons: {
