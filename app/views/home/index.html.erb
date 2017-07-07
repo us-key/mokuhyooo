@@ -1,43 +1,9 @@
 <div class="container-fluid">
+  <%=react_component('IndexParent',
+    url: '/api/v1/freewords.json',
+    source_date: Date.today.strftime("%Y/%m/%d"))
+  %>
   <div class="row">
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          年
-        </div>
-        <div class="panel">
-          <%=react_component('FreewordParentBox',
-            url: '/api/v1/freewords.json',
-            source_date: "2017/06/07",
-            unit: "Y"
-          )%>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">月</div>
-        <div class="panel">
-          <%=react_component('FreewordParentBox',
-            url: '/api/v1/freewords.json',
-            source_date: "2017/06/07",
-            unit: "M"
-          )%>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">週</div>
-        <div class="panel">
-          <%=react_component('FreewordParentBox',
-            url: '/api/v1/freewords.json',
-            source_date: "2017/06/07",
-            unit: "W"
-          )%>
-        </div>
-      </div>
-    </div>
     <div class="col-md-12">
       <div class="panel panel-default">
         <div class="panel-heading">日毎</div>
