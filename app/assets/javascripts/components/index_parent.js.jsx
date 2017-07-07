@@ -41,6 +41,9 @@ var IndexParent = React.createClass({
           url={this.props.url}
           source_date={this.state.source_date}
         />
+        <DateParentBox
+          source_date={this.state.source_date}
+        />
       </div>
     );
   }

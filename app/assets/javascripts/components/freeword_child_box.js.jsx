@@ -41,30 +41,11 @@ var FreewordChildBox = React.createClass({
     // 初日
     var dt = new Date(source_date);
     var prev_dt = dt;
-    switch(this.props.unit) {
-      case "Y" :
-        this.state.target_date = dt.getFullYear() + "/01/01";
-        prev_dt = addDate(prev_dt, -1, "YYYY");
-        this.state.prev_date = prev_dt.getFullYear() + "/01/01";
-        break;
-      case "M" :
-        this.state.target_date = dt.getFullYear() + "/" + ("0"+(dt.getMonth() + 1)).slice(-2)
-          + "/01";
-        prev_dt = addDate(prev_dt, -1, "MM");
-        this.state.prev_date = prev_dt.getFullYear() + "/" + ("0"+(prev_dt.getMonth() + 1)).slice(-2)
-          + "/01";
-        break;
-      case "W" :
-        // source_dateから曜日の日数(日：0 月：1 … 土：6 …getDay()で取得)を引く
-        dt.setDate(dt.getDate() - dt.getDay());
-        this.state.target_date = dt.getFullYear() + "/" + ("0"+ (dt.getMonth() + 1)).slice(-2)
-          + "/" + ("0"+ dt.getDate()).slice(-2);
-        prev_dt.setDate(prev_dt.getDate() - (7 + prev_dt.getDay()));
-        this.state.prev_date = prev_dt.getFullYear() + "/" + ("0"+ (prev_dt.getMonth() + 1)).slice(-2)
-          + "/" +  ("0"+ prev_dt.getDate()).slice(-2);
-        break;
-      default : ;
-    }
+    this.setState({
+      target_date: getFirstDate(source_date, this.props.unit, false),
+      prev_date:   getFirstDate(source_date, this.props.unit, true)
+    });
+
   },
   render() {
     console.log(this.props.unit+"_render()");
@@ -113,21 +94,20 @@ var FreeWordBox = React.createClass({
     console.log(this.props.prefix+"_componentWillMount()");
     this.getComment(this.props.target_date);
   },
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     console.log(this.props.prefix+"shouldComponentUpdate()");
-    if (this.state.com_id == "-1") {
-      // 初回起動時、ajax完了後にstate変更により本functionが呼び出されるため、
-      // getCommentは再実行せず、renderは実行する。
-      console.log(this.props.prefix+":初回");
-      return true;
-    } else if (this.props.target_date !== nextProps.target_date) {
+    // props.target_dateが変更された場合、getCommentよびだし
+    // state.com_idが変更された場合(getCommentのajax結果)、rerender
+    if (this.props.target_date !== nextProps.target_date) {
       // props.target_dateが変更された場合、getCommentしてrenderする
       console.log(this.props.prefix+":再取得");
       this.getComment(nextProps.target_date);
+      return false;
+    } else if (this.state.com_id !== nextState.com_id) {
+      console.log(this.props.prefix+":再描画");
       return true;
     } else {
-      // 初回ではなくprops.target_dateが変更されていない場合、何もしない
-      console.log(this.props.prefix+":再取得しない");
+      console.log(this.props.prefix+":何もしない");
       return false;
     }
   },
@@ -246,33 +226,3 @@ var FreeWordBox = React.createClass({
     );
   }
 });
-
-/**
- * 日付を加算する
- * @param  {Date}   date       日付
- * @param  {Number} num        加算数
- * @param  {String} [interval] 加算する単位
- * @return {Date}              加算後日付
- */
-var addDate = function (date, num, interval) {
-  switch (interval) {
-    case 'YYYY':
-      date.setYear(1900 + date.getYear() + num);
-      break;
-    case 'MM':
-      date.setMonth(date.getMonth() + num);
-      break;
-    case 'hh':
-      date.setHours(date.getHours() + num);
-      break;
-    case 'mm':
-      date.setMinutes(date.getMinutes() + num);
-      break;
-    case 'ss':
-      date.setSeconds(date.getSeconds() + num);
-      break;
-    default:
-      date.setDate(date.getDate() + num);
-  }
-  return date;
-};
