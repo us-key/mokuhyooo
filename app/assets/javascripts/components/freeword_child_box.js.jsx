@@ -84,8 +84,7 @@ var FreeWordBox = React.createClass({
   getInitialState() {
     console.log(this.props.prefix+"_getInitialState()");
     return {
-      // 初期状態の判別用ID
-      com_id:"-1",
+      com_id:"",
       comment:"",
       message:""
     };
@@ -97,13 +96,13 @@ var FreeWordBox = React.createClass({
   shouldComponentUpdate(nextProps, nextState) {
     console.log(this.props.prefix+"shouldComponentUpdate()");
     // props.target_dateが変更された場合、getCommentよびだし
-    // state.com_idが変更された場合(getCommentのajax結果)、rerender
+    // state.com_id/commentが変更された場合(getCommentのajax結果)、rerender
     if (this.props.target_date !== nextProps.target_date) {
-      // props.target_dateが変更された場合、getCommentしてrenderする
       console.log(this.props.prefix+":再取得");
       this.getComment(nextProps.target_date);
       return false;
-    } else if (this.state.com_id !== nextState.com_id) {
+    } else if ((this.state.com_id !== nextState.com_id)
+      || (this.state.comment !== nextState.comment)) {
       console.log(this.props.prefix+":再描画");
       return true;
     } else {

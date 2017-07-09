@@ -2,15 +2,43 @@
  * DateBoxの親component
  * props.source_dateを元に一週間分の日付を取得し、
  * それぞれの日付で子componentを用意する
+ * props.source_dateを元に算出した週の初日(state.target_date)が
+ * 変わらない場合、再描画しない(子componentも)
  */
 var DateParentBox = React.createClass({
-  update_target_date(source_date) {
-    console.log("date_update_target_date()");
+  componentWillMount() {
+    console.log("date_componentWillMount()");
+    this.setState({target_date: this.getTargetDate(this.props.source_date)});
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("date_componentWillReceiveProps()");
+    // props.source_dateを元に算出した週の初日が変わらない場合、
+    // 再描画しない
+    if (this.getTargetDate(this.props.source_date)
+        === this.getTargetDate(nextProps.source_date)) {
+      return false;
+    }
+    this.setState({target_date: this.getTargetDate(nextProps.source_date)});
+    return true;
+  },
+  getTargetDate(sourceDate) {
+    console.log("date_getTargetDate()");
     // 週の初日を得る
-    var dt = new Date(source_date);
-    
+    return getFirstDate(sourceDate, "W", false);
+  },
+  get7DaysOfWeek(firstDay) {
+    var dt = new Date(firstDay);
+    var daysOfWeek = [];
+    for (var i = 0; i < 7; i++) {
+      daysOfWeek.push(dt.getFullYear() + "/" + ("0" + (dt.getMonth() + 1)).slice(-2)
+        + "/" + ("0" + dt.getDate()).slice(-2));
+      dt.setDate(dt.getDate()+1);
+    }
+    return daysOfWeek;
   },
   render () {
+    console.log("date_render()");
+    var daysOfWeek = this.get7DaysOfWeek(this.state.target_date);
     return (
       <div className="row">
         <div className="col-md-12">
