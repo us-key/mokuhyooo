@@ -95,7 +95,7 @@ var FreeWordBox = React.createClass({
   },
   shouldComponentUpdate(nextProps, nextState) {
     console.log(this.props.prefix+"shouldComponentUpdate()");
-    // props.target_dateが変更された場合、getCommentよびだし
+    // props.target_dateが変更された場合、getComment呼出(ajax)
     // state.com_id/commentが変更された場合(getCommentのajax結果)、rerender
     if (this.props.target_date !== nextProps.target_date) {
       console.log(this.props.prefix+":再取得");

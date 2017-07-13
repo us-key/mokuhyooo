@@ -25,9 +25,9 @@ var FreewordParentBox = React.createClass({
             <div className="panel-heading">年</div>
             <div className="panel">
               <FreewordChildBox
-                 url='/api/v1/freewords.json'
-                 source_date={this.state.target_date}
-                 unit="Y"
+                url={this.props.url}
+                source_date={this.state.target_date}
+                unit="Y"
               />
             </div>
           </div>
@@ -37,9 +37,9 @@ var FreewordParentBox = React.createClass({
             <div className="panel-heading">月</div>
             <div className="panel">
               <FreewordChildBox
-                 url='/api/v1/freewords.json'
-                 source_date={this.state.target_date}
-                 unit="M"
+                url={this.props.url}
+                source_date={this.state.target_date}
+                unit="M"
               />
             </div>
           </div>
@@ -49,9 +49,9 @@ var FreewordParentBox = React.createClass({
             <div className="panel-heading">週</div>
             <div className="panel">
               <FreewordChildBox
-                 url='/api/v1/freewords.json'
-                 source_date={this.state.target_date}
-                 unit="W"
+                url={this.props.url}
+                source_date={this.state.target_date}
+                unit="W"
               />
             </div>
           </div>
