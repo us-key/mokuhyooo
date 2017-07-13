@@ -50,7 +50,7 @@ var FreewordChildBox = React.createClass({
   render() {
     console.log(this.props.unit+"_render()");
     return(
-      <div className="monthMokuhyoBox">
+      <div>
         <FreeWordBox
           unit={this.props.unit}
           type="R"
