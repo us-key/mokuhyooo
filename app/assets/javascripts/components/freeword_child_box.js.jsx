@@ -96,13 +96,12 @@ var FreeWordBox = React.createClass({
   shouldComponentUpdate(nextProps, nextState) {
     console.log(this.props.prefix+"shouldComponentUpdate()");
     // props.target_dateが変更された場合、getComment呼出(ajax)
-    // state.com_id/commentが変更された場合(getCommentのajax結果)、rerender
+    // state(com_id/comment/message)が変更された場合(getComment/onClickのajax結果)、rerender
     if (this.props.target_date !== nextProps.target_date) {
       console.log(this.props.prefix+":再取得");
       this.getComment(nextProps.target_date);
       return false;
-    } else if ((this.state.com_id !== nextState.com_id)
-      || (this.state.comment !== nextState.comment)) {
+    } else if (this.state !== nextState) {
       console.log(this.props.prefix+":再描画");
       return true;
     } else {
@@ -167,6 +166,12 @@ var FreeWordBox = React.createClass({
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
+        // 過去のメッセージが再表示されないように一旦すべて消す
+        $('.register_msg').text("");
+        $('.register_msg').show();
+        this.setState({
+          message: "登録に失敗しました。再実行してください。"
+        });
       }.bind(this)
     });
   },
