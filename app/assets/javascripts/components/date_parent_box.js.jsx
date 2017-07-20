@@ -9,12 +9,14 @@ var DateParentBox = React.createClass({
   getInitialState() {
     console.log("date_getInitialState()");
     return {
-      dateValue: []
+      dateArr: [],
+      items: {}
     };
   },
   componentWillMount() {
     console.log("date_componentWillMount()");
-    this.getDateValue(this.getTargetDate(this.props.source_date));
+    this.getDate(this.getTargetDate(this.props.source_date));
+    this.getTargetItem();
   },
   shouldComponentUpdate(nextProps, nextState) {
     console.log("date_shouldComponentUpdate()");
@@ -22,10 +24,10 @@ var DateParentBox = React.createClass({
     // state.dateValueが変更された場合(getDateValueのajax結果)、rerender
     if (this.getTargetDate(this.props.source_date)
         !== this.getTargetDate(nextProps.source_date)) {
-      console.log("date:再取得");
-      this.getDateValue(this.getTargetDate(nextProps.source_date));
-      return false;
-    } else if((this.state.dateValue !== nextState.dateValue)) {
+//      console.log("date:再取得");
+//      this.getDate(this.getTargetDate(nextProps.source_date));
+//      return false;
+//    } else if((this.state.dateValue !== nextState.dateValue)) {
       console.log("date:再描画");
       return true;
     } else {
@@ -38,122 +40,68 @@ var DateParentBox = React.createClass({
     // 週の初日を得る
     return getFirstDate(sourceDate, "W", false);
   },
-  // 日付ごとにT⇒Rの順でajaxリクエスト
-  getDateValue(firstDay) {
+  // 週の初日を元に1週間の日付を算出し配列に詰める
+  getDate(firstDay) {
     console.log("date_getDateValue()");
     console.log("target_date:" + firstDay);
     var dt = new Date(firstDay);
     // 日付をキー、データの連想配列を要素とした連想配列(1件ずつ配列に詰める)
-    var data = {};
+//    var data = {};
     // 作成した連想配列を詰める配列
-    var dataArr = [];
-    // ajaxで目標・振り返り取得用の配列;
-    let typeArr = ['T', 'R'];
-    var jqXHRList = [];
     var dateArr = [];
+    // ajaxで目標・振り返り取得用の配列;
+//    let typeArr = ['T', 'R'];
+//    var jqXHRList = [];
     for (var i = 0; i < 7; i++) {
       var dtKey = dt.getFullYear() + "/" + ("0" + (dt.getMonth() + 1)).slice(-2)
                   + "/" + ("0" + dt.getDate()).slice(-2);
       // 後でレコードとセットの配列に詰めるために配列にセットしておく
       dateArr.push(dtKey);
-      for (var type of typeArr) {
-        const typeVal = type;
-        jqXHRList.push($.ajax({
-            url:this.props.url,
-            dataType: 'json',
-            data: {
-              record_date: dtKey,
-              target_unit: 'D',
-              target_review_type: type
-            }
-        }));
-      }
+      console.log("dateArr.push:" + dtKey);
       dt.setDate(dt.getDate() + 1);
     }
-    // 順番が保証されるよう受け取る
-    $.when.apply($, jqXHRList).done(function() {
-      var k = 0;
-      dateData = {};
-      for (var j = 0; j < arguments.length; j++) {
-        result = arguments[j][0];
-        console.log("date:" + dateArr[k]);
-        // 偶数がT,偶数がR
-        if (j % 2 === 0) {
-          dateData['target_id'] = result.id ? result.id : "";
-          dateData['target_comment'] = result.comment ? result.comment : "";
-        } else {
-          dateData['review_id'] = result.id ? result.id : "";
-          dateData['review_comment'] = result.comment ? result.comment : "";
-        }
-        // 2件ごとにdataを詰める(奇数のときに詰める)
-        if (j % 2 !== 0) {
-          // 参照渡しにならないよう、一度JSONに変換して戻したものを詰める
-          // 中身は1件だけの連想配列の連想配列
-          // {'yyyy/MM/dd' : {'target_id' : xxx,  'target_comment' : xxx, ...}}
-          data[dateArr[k]] = dateData;
-          const dataVal = JSON.parse(JSON.stringify(data));
-          dataArr.push(dataVal);
-          data = {};
-          // 日付加算用のインデックスをカウントアップ
-          k += 1;
-        }
-      }
-      this.setState({
-        dateValue : dataArr
-      });
-    }.bind(this));
-
-
-
+    this.setState({dateArr : dateArr});
+  },
+  // ユーザーごとの数値目標項目を取得する
+  getTargetItem() {
+    console.log("date_getTargetITem()");
+    itemsArr = {};
+    // TODO 試しに入れてみる
+    itemsArr[1] = {"name":"勉強時間","type":"SUM","kind":"TI","flg":"1"};
+    itemsArr[2] = {"name":"テスト","type":"SUM","kind":"TI","flg":"1"};
+    // TODO ajaxで数値目標のリストを取得
     /*
-          success: function(result) {
-            if ('T' === typeVal) {
-              console.log("success:" + dtVal + "_" + typeVal);
-              console.log(dateData['target_comment']);
-              dateData['target_id'] = result.id ? result.id : "";
-              dateData['target_comment'] = result.comment ? result.comment : "";
-            } else if ('R' === typeVal) {
-              console.log("success:" + dtVal + "_" + typeVal);
-              dateData['review_id'] = result.id ? result.id : "";
-              dateData['review_comment'] = result.comment ? result.comment : "";
-            }
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error(this.props.url, status, err.toString());
-          }.bind(this)
-        });
-      }
-      data[dtVal] = dateData;
-      dt.setDate(dt.getDate() + 1);
-    }
-    this.setState({
-      dateValue: data
-    })
-    */
+      [SAMPLE]
+       items: {
+                1:{"name":"勉強時間","type":"SUM","kind":"TI","flg":"1"},
+                2:{"name":"テスト","type":"SUM","kind":"TI","flg":"1"},
+                …
+              }
+     */
+    // setState
+    this.setState({items : itemsArr})
   },
   render () {
     console.log("date_render()");
-    // 日毎のコメントを日付分だけ取得して配列か何かに詰める
-    // 自分で作った数値目標を日付分だけ取得して配列か何かに詰める
-    var dateNode = this.state.dateValue.map(function (data) {
-      // キー取得
-      var key = [];
-      for (var i in data) {key.push(i);} // 1件のみセットされる想定
+    console.log(this.state.dateArr.length);
+    var url = this.props.url;
+    var items = this.state.items;
+    var dateNode = this.state.dateArr.map(function(data) {
       return (
-        <tr key={key[0]}>
-          <td>
-            {key[0]}
-          </td>
-          {// この後に日付毎のコメント、数値目標を詰める
-          }
-          <td id={data[key[0]]['target_id']}>{data[key[0]]['target_comment']}</td>
-          <td id={data[key[0]]['review_id']}>{data[key[0]]['review_comment']}</td>
-          <td>100</td>
-          <td>20</td>
-          <td>100000</td>
-        </tr>
-      );
+        <DateChildBox
+          url={url}
+          target_date={data}
+          items={items}
+        />
+      )
     });
+    var itemNum = Object.keys(this.state.items).length;
+    itemsArr = this.state.items;
+    var header = Object.keys(this.state.items).map(function(key, idx) {
+      return (
+        <th>{itemsArr[key]["name"]}</th>
+      )
+    })
     return (
       <div className="row">
         <div className="col-md-12">
@@ -172,50 +120,24 @@ var DateParentBox = React.createClass({
                     <th rowSpan="2">振返り</th>
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
                     }
-                    <th colSpan="3">数値目標<a href="#">目標を追加する</a></th>
+                    <th colSpan={itemNum}>数値目標<a href="#">目標を追加する</a></th>
                   </tr>
                   <tr>
-                    <th>目標A(合計)</th>
-                    <th>目標B(平均)</th>
-                    <th>目標C(合計)</th>
+                  {header}
                   </tr>
                 </thead>
                 <tbody>
                   {// 1週間分の行数用意。日曜～土曜？
                   }
-                    {dateNode}
+                  {dateNode}
                   {// 目標の進捗表示行。週・月・年
                   }
-                  <tr>
-                    <td colSpan="3">目標値/進捗(週)</td>
-                    {// 追加分
-                    }
-                    <td>100/5%</td>
-                    <td>20</td>
-                    <td>100000/10%</td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3">目標値/進捗(月)</td>
-                    {// 追加分
-                    }
-                    <td>100/5%</td>
-                    <td>20</td>
-                    <td>100000/10%</td>
-                  </tr>
-                  <tr>
-                    <td colSpan="3">目標値/進捗(年)</td>
-                    {// 追加分
-                    }
-                    <td>100/5%</td>
-                    <td>20</td>
-                    <td>100000/10%</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 });

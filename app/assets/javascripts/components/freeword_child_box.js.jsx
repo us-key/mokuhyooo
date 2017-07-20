@@ -2,8 +2,6 @@
  * Freewordの子component
  * Props:source_date:算出元日付
  * State:target_date:source_dateを元に算出した日付(年or月or週の初日)
- *       base_target_date:変更前のtarget_date。source_date変更時の
- *                        target_date変更判別用。
  *       prev_date:prev_month用の日付
  */
 var FreewordChildBox = React.createClass({
@@ -16,7 +14,6 @@ var FreewordChildBox = React.createClass({
     return {
       data: [],
       target_date: this.props.source_date,
-      base_target_date:this.props.source_date,
       pr_prefix: this.props.unit + "_PR",
       t_prefix: this.props.unit + "_T",
       r_prefix: this.props.unit + "_R"
