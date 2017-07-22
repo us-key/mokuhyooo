@@ -64,15 +64,26 @@ var DateItemBox = React.createClass({
     this.setState({item_val: e.target.value});
   },
   render() {
-    return (
-      <td>
-        <input id={this.state.item_val_id}
-               value={this.state.item_val}
-               onChange={this.onChangeText}
-               >
-          </input>
-      </td>
-    )
+    // 目標・振り返りはtextarea,他はinputtext
+    if ((this.props.item_id == -1) || (this.props.item_id == 0)) {
+      return (
+        <td>
+         <textarea id={this.state.item_val_id}
+                value={this.state.item_val}
+             onChange={this.onChangeText}>
+         </textarea>
+        </td>
+      );
+    } else {
+      return (
+        <td>
+         <input id={this.state.item_val_id}
+                value={this.state.item_val}
+             onChange={this.onChangeText}>
+         </input>
+        </td>
+      );
+    }
   }
 
 });
