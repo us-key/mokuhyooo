@@ -23,16 +23,22 @@ class Api::V1::FreewordsController < ApplicationController
 
   def create
     @freeword = nil
+    @message = nil
     if params[:id].present? && (@freeword = Freeword.find(params[:id]))
       @freeword.comment = params[:comment]
+      @freeword.save
     else
-      @freeword = Freeword.new
-      @freeword.comment = params[:comment]
-      @freeword.target_unit = params[:target_unit]
-      @freeword.target_review_type = params[:target_review_type]
-      @freeword.record_date = Date.parse(params[:record_date])
+      if params[:comment] = ""
+        @message = "入力してください"
+      else
+        @freeword = Freeword.new
+        @freeword.comment = params[:comment]
+        @freeword.target_unit = params[:target_unit]
+        @freeword.target_review_type = params[:target_review_type]
+        @freeword.record_date = Date.parse(params[:record_date])
+        @freeword.save
+      end
     end
-    @freeword.save
     render 'show', formats: 'json', handlers:'jbuilder'
   end
 

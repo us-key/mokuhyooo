@@ -153,13 +153,18 @@ var FreeWordBox = React.createClass({
       },
       success: function(result) {
         console.log(this.props.prefix+"_Result" + result.message);
-        // 過去のメッセージが再表示されないように一旦すべて消す
-        $('.register_msg').text("");
-        $('.register_msg').show();
         this.setState({
           message: result.message
         });
+        // メッセージ表示して2秒後に消す
+        $('.register_msg').show();
         $('.register_msg').delay(1500).fadeOut(500);
+        var clearMsg = setInterval(function() {
+          this.setState({
+            message: ""
+          });
+          clearInterval(clearMsg);
+        }.bind(this), 2000);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
