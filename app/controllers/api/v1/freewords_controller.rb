@@ -28,7 +28,7 @@ class Api::V1::FreewordsController < ApplicationController
       @freeword.comment = params[:comment]
       @freeword.save
     else
-      if params[:comment] = ""
+      if params[:comment] == ""
         @message = "入力してください"
       else
         @freeword = Freeword.new

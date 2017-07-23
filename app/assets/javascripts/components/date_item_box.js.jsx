@@ -70,6 +70,7 @@ var DateItemBox = React.createClass({
         <td>
          <textarea id={this.state.item_val_id}
                 value={this.state.item_val}
+            className="form-control"
              onChange={this.onChangeText}>
          </textarea>
         </td>
@@ -78,8 +79,9 @@ var DateItemBox = React.createClass({
       return (
         <td>
          <input id={this.state.item_val_id}
-                value={this.state.item_val}
-             onChange={this.onChangeText}>
+             value={this.state.item_val}
+         className="form-control"
+          onChange={this.onChangeText}>
          </input>
         </td>
       );

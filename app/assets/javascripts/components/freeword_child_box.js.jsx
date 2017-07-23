@@ -216,8 +216,13 @@ var FreeWordBox = React.createClass({
       <div className={headerPanelClass}>
         <div className="panel-heading">
           <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
-          <a href="#"><span className="glyphicon glyphicon-pencil" aria-hidden="true"/></a>
-          <a href="#"><span id='register' onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>登録</span></a>
+          <a href="#">
+            <span id="register"
+                  className="glyphicon glyphicon-save"
+                  aria-hidden="true"
+                  onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>
+            </span>
+          </a>
           <span className="register_msg">{this.state.message}</span>
         </div>
         <div id={panelId} className={panelClass}>

@@ -20,12 +20,12 @@ var DateParentBox = React.createClass({
   },
   shouldComponentUpdate(nextProps, nextState) {
     console.log("date_shouldComponentUpdate()");
-    // prosp.source_dateが変更された場合、getDateValue呼出(ajax)
+    // props.source_dateが変更された場合、getDateValue呼出(ajax)
     // state.dateValueが変更された場合(getDateValueのajax結果)、rerender
     if (this.getTargetDate(this.props.source_date)
         !== this.getTargetDate(nextProps.source_date)) {
 //      console.log("date:再取得");
-//      this.getDate(this.getTargetDate(nextProps.source_date));
+      this.getDate(this.getTargetDate(nextProps.source_date));
 //      return false;
 //    } else if((this.state.dateValue !== nextState.dateValue)) {
       console.log("date:再描画");
