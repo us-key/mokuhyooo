@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724143214) do
+ActiveRecord::Schema.define(version: 20170724144350) do
 
   create_table "freewords", force: :cascade do |t|
     t.integer  "user_id"
@@ -20,6 +20,12 @@ ActiveRecord::Schema.define(version: 20170724143214) do
     t.date     "record_date"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+  end
+
+  create_table "quantitative_performances", force: :cascade do |t|
+    t.integer "target_id"
+    t.date    "performance_date"
+    t.integer "performance_value"
   end
 
   create_table "quantitative_targets", force: :cascade do |t|
