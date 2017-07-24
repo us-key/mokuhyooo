@@ -14,11 +14,6 @@ var DateChildBox = React.createClass({
       review_comment:""
     };
   },
-  componentWillMount() {
-    console.log("date_child_componentWillMount()");
-//    this.getComment(this.props.target_date, "T");
-//    this.getComment(this.props.target_date, "R");
-  },
 /*
   getComment(target_date, type) {
     console.log("date_child_getComment()")
@@ -65,6 +60,15 @@ var DateChildBox = React.createClass({
     })
     return (
       <tr>
+        <td>
+          <a href="#">
+          <span id="register"
+                className="glyphicon glyphicon-save"
+                aria-hidden="true"
+                onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>
+          </span>
+        </a>
+        </td>
         <td>
         {target_date}
         </td>

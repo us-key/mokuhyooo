@@ -18,16 +18,15 @@ var DateParentBox = React.createClass({
     this.getDate(this.getTargetDate(this.props.source_date));
     this.getTargetItem();
   },
+  componentWillReceiveProps(nextProps) {
+    console.log("date_componentWillReceiveProps()");
+    this.getDate(this.getTargetDate(nextProps.source_date));
+  },
   shouldComponentUpdate(nextProps, nextState) {
     console.log("date_shouldComponentUpdate()");
-    // props.source_dateが変更された場合、getDateValue呼出(ajax)
-    // state.dateValueが変更された場合(getDateValueのajax結果)、rerender
+    // 週が変わった場合、rerender(componentWillReceicePropsで取得した週の日付で再描画)
     if (this.getTargetDate(this.props.source_date)
         !== this.getTargetDate(nextProps.source_date)) {
-//      console.log("date:再取得");
-      this.getDate(this.getTargetDate(nextProps.source_date));
-//      return false;
-//    } else if((this.state.dateValue !== nextState.dateValue)) {
       console.log("date:再描画");
       return true;
     } else {
@@ -115,6 +114,7 @@ var DateParentBox = React.createClass({
                   <tr>
                     {// 固定列
                     }
+                    <th rowSpan="2"></th>
                     <th rowSpan="2">日付</th>
                     <th rowSpan="2">目標</th>
                     <th rowSpan="2">振返り</th>
