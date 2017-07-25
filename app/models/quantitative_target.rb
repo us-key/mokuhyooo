@@ -1,0 +1,2 @@
+class QuantitativeTarget < ApplicationRecord
+end
