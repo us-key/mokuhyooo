@@ -29,6 +29,10 @@ var DateParentBox = React.createClass({
         !== this.getTargetDate(nextProps.source_date)) {
       console.log("date:再描画");
       return true;
+    } else if (this.state.items != nextState.items) {
+      // 数値目標のヘッダーが更新された場合rerender
+      console.log("date:再描画");
+      return true;
     } else {
       console.log("date:何もしない");
       return false;
@@ -65,20 +69,16 @@ var DateParentBox = React.createClass({
   getTargetItem() {
     console.log("date_getTargetITem()");
     itemsArr = {};
-    // TODO 試しに入れてみる
-    itemsArr[1] = {"name":"勉強時間","type":"SUM","kind":"TI","flg":"1"};
-    itemsArr[2] = {"name":"テスト","type":"SUM","kind":"TI","flg":"1"};
-    // TODO ajaxで数値目標のリストを取得
-    /*
-      [SAMPLE]
-       items: {
-                1:{"name":"勉強時間","type":"SUM","kind":"TI","flg":"1"},
-                2:{"name":"テスト","type":"SUM","kind":"TI","flg":"1"},
-                …
-              }
-     */
-    // setState
-    this.setState({items : itemsArr})
+    // ajaxで数値目標のリストを取得
+    $.ajax({
+      url: '/api/v1/date_target_headers.json',
+      dataType: 'json',
+      success: function(result) {
+        this.setState({
+          items: result
+        });
+      }.bind(this)
+    });
   },
   render () {
     console.log("date_render()");
