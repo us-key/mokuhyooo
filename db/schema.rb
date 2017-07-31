@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724144350) do
+ActiveRecord::Schema.define(version: 20170726235326) do
 
   create_table "freewords", force: :cascade do |t|
     t.integer  "user_id"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20170724144350) do
   end
 
   create_table "quantitative_performances", force: :cascade do |t|
-    t.integer "target_id"
+    t.integer "quantitative_target_id"
     t.date    "performance_date"
     t.integer "performance_value"
   end
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20170724144350) do
     t.string   "default_zero_flg"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.integer  "sort_order"
   end
 
   create_table "users", force: :cascade do |t|

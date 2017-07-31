@@ -6,14 +6,6 @@
  *
  */
 var DateChildBox = React.createClass({
-  getInitialState() {
-    console.log("date_child_getInitialState()");
-    return {
-      com_id:"",
-      target_comment:"",
-      review_comment:""
-    };
-  },
 /*
   getComment(target_date, type) {
     console.log("date_child_getComment()")
@@ -41,23 +33,65 @@ var DateChildBox = React.createClass({
     });
   },
 */
+  getInitialState() {
+    console.log("date_child_getInitialState()");
+    return {
+      item_values: {}
+    };
+  },
+  componentWillReceiveProps(nextProps) {
+    console.log("date_child_componentWillReceiveProps()");
+    this.getItemValues(nextProps.target_date)
+  },
+  componentWillMount() {
+    console.log("date_child_componentWillMount()");
+    this.getItemValues(this.props.target_date);
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("date_child_shouldComponentUpdate()");
+    // ajax結果でsetStateされたら再描画
+    if (this.state.item_values != nextState.item_values) {
+      console.log("date_child:再描画");
+      return true;
+    } else {
+      console.log("date_child:何もしない");
+      return false;
+    }
+  },
+  // props.target_dateを元に数値目標一覧を受け取りsetStateする
+  getItemValues(target_date) {
+    $.ajax({
+      url: '/api/v1/date_targets.json',
+      dataType: 'json',
+      data: {
+        target_date: target_date,
+      },
+      success: function(result) {
+        console.log("date_child_ajax(get)");
+        this.setState ({
+          item_values: result
+        });
+      }.bind(this)
+    });
+  },
   render () {
     console.log("date_child_render()");
-    var url = this.props.url
-    var target_date = this.props.target_date
-    var items = this.props.items
-    var blank = {}
+    var url = this.props.url;
+    var target_date = this.props.target_date;
+    var items = this.props.items;
+    var item_values = this.state.item_values;
+    var blank = {};
     // item_idは数値目標のID。個別の入力値のIDではない。目標・振返りには-1,0を設定
-    var itemsBox = Object.keys(this.props.items).map(function(key, idx) {
+    var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
+      var item_arr = item_values[key]; // {"target_id": xxx, "id": xxx, "value": xxx}
       return (
         <DateItemBox
-          url={url}
-          target_date={target_date}
-          item_id={key}
-          items={items[key]}
+          id = {item_arr["id"]}
+          target_id = {item_arr["target_id"]}
+          item_value = {item_arr["value"]}
         />
-      )
-    })
+      );
+    });
     return (
       <tr>
         <td>
@@ -73,22 +107,6 @@ var DateChildBox = React.createClass({
         {target_date}
         </td>
         {// 目標BOX
-        }
-        <DateItemBox
-          url={url}
-          target_date={target_date}
-          item_id="-1"
-          items={blank}
-        />
-        {// 振返りBOX
-        }
-        <DateItemBox
-          url={url}
-          target_date={target_date}
-          item_id="0"
-          items={blank}
-        />
-        {// 数値目標BOX
         }
         {itemsBox}
       </tr>
