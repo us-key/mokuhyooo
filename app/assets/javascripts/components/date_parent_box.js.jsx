@@ -98,7 +98,7 @@ var DateParentBox = React.createClass({
     itemsArr = this.state.items;
     var header = Object.keys(this.state.items).map(function(key, idx) {
       return (
-        <th>{itemsArr[key]["name"]}</th>
+        <th id={itemsArr[key]["qt_id"]}>{itemsArr[key]["name"]}</th>
       )
     })
     return (

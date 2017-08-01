@@ -74,6 +74,58 @@ var DateChildBox = React.createClass({
       }.bind(this)
     });
   },
+  onClick(e) {
+    e.preventDefault();
+    console.log("date_child_box:onclick()");
+    // 行のjQueryオブジェクト取得
+    var tr = $(e.target).parent().parent().parent();
+    var td = tr.find('td');
+    var date = "";
+    var record = {};
+    console.log(tr);
+    console.log(td);
+    for (var i = 0, len = td.length; i < len; i++) {
+      // 0：ボタン
+      // 1：日付
+      // 2,3：目標・振り返り
+      // 4～：数値目標(ソート順:2～)
+      if (i == 1) {
+        date = td.eq(i).text();
+        console.log(date);
+      }
+      if (i >= 2) {
+        var id = td.eq(i).children()[0].id;
+        var val = td.eq(i).children()[0].value;
+        console.log("id:" + id + ",val:" + val);
+        record[i-2]= {"id": id, "value": val};
+      }
+    }
+    // TODO ajaxでレコード送信
+    // requestの形式
+    // {
+    //   date: '2017/08/01'
+    //   record: {
+    //     xx: {id: xx, value: xx} // key:sort_order⇒itemをサーバー側で識別するために使用。
+    //     yy: {id: yy, value: yy}
+    //     ...
+    //   }
+    // }
+    $.ajax({
+      url: '/api/v1/date_targets.json',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        'date': date,
+        'record': record
+      },
+      success: function(result) {
+
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
   render () {
     console.log("date_child_render()");
     var url = this.props.url;

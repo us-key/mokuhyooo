@@ -41,7 +41,7 @@ var DateItemBox = React.createClass({
     } else {
       return (
         <td>
-         <input id={this.state.id}
+         <input id={this.props.id}
              value={this.state.item_value}
          className="form-control"
           onChange={this.onChangeText}>

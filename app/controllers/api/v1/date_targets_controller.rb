@@ -45,10 +45,12 @@ class Api::V1::DateTargetsController < ApplicationController
   end
 
   def create
+    logger.debug(params[:date])
+    logger.debug(params[:record])
   end
 
   private
     def date_target_params
-      params.permit(:target_date)
+      params.permit(:target_date, :date, :record)
     end
 end
