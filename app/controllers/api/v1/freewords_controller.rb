@@ -24,7 +24,11 @@ class Api::V1::FreewordsController < ApplicationController
   def create
     @freeword = nil
     @message = nil
-    if params[:id].present? && (@freeword = Freeword.find(params[:id]))
+    if (@freeword = Freeword.find_by(
+          target_unit: params[:target_unit],
+          target_review_type: params[:target_review_type],
+          record_date: Date.parse(params[:record_date])
+      ))
       @freeword.comment = params[:comment]
       @freeword.save
     else

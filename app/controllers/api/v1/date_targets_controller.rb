@@ -60,7 +60,12 @@ class Api::V1::DateTargetsController < ApplicationController
           end
           # 目標/振返り
           @comment = nil
-          if id.present? && (@comment = Freeword.find(id))
+          # TODO ユーザーで絞る必要あり！！！
+          if (@comment = Freeword.find_by(
+                target_unit: "D",
+                target_review_type: (sort_order == 2 ? "T" : "R"),
+                record_date: Date.parse(params[:date])
+            ))
             logger.debug("更新")
             @comment.comment = val
             @comment.save
