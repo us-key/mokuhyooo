@@ -46,7 +46,46 @@ class Api::V1::DateTargetsController < ApplicationController
 
   def create
     logger.debug(params[:date])
-    logger.debug(params[:record])
+    if params[:record].present?
+      # hashの値でループ
+      sort_order = 2
+      params[:record].values.each do |rec|
+        id = rec["id"]
+        val = rec["value"]
+        if sort_order <= 3
+          if sort_order == 2
+            logger.debug("目標")
+          else
+            logger.debug("振返り")
+          end
+          # 目標/振返り
+          @comment = nil
+          if id.present? && (@comment = Freeword.find(id))
+            logger.debug("更新")
+            @comment.comment = val
+            @comment.save
+          else
+            logger.debug("新規登録")
+            if val == ""
+              # TODO メッセージ出す？
+            else
+              @comment = Freeword.new
+              @comment.comment = val
+              @comment.target_unit = "D"
+              # sort_orderで目標/振返りの判別
+              @comment.target_review_type = (sort_order == 2 ? "T" : "R")
+              @comment.record_date = Date.parse(params[:date])
+              @comment.save
+            end
+          end
+        else
+          # 数値目標実績
+        end
+
+        sort_order += 1
+      end
+    end
+    render 'show', formats: 'json', handlers: 'jbuilder'
   end
 
   private
