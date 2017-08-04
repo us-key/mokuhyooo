@@ -6,33 +6,7 @@
  *
  */
 var DateChildBox = React.createClass({
-/*
-  getComment(target_date, type) {
-    console.log("date_child_getComment()")
-    console.log("date_child:target_date:"+ target_date + "/type:" + type);
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      data: {
-        record_date: target_date,
-        target_unit: "D",
-        target_review_type: type
-      },
-      success: function(result) {
-        console.log(this.props.prefix+"_id:" + result.id);
-        console.log(this.props.prefix+"_comment:" + result.comment);
-        this.setState({
-          // undefinedの場合ブランクを設定
-          com_id: result.id ? result.id : "",
-          comment: result.comment ? result.comment : ""
-        });
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-*/
+
   getInitialState() {
     console.log("date_child_getInitialState()");
     return {
@@ -100,7 +74,7 @@ var DateChildBox = React.createClass({
         record[i-2]= {"id": id, "value": val};
       }
     }
-    // TODO ajaxでレコード送信
+    // ajaxでレコード送信
     // requestの形式
     // {
     //   date: '2017/08/01'
@@ -119,11 +93,12 @@ var DateChildBox = React.createClass({
         'record': record
       },
       success: function(result) {
-
+        this.props.showMsg(result.message);
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
+
     });
   },
   render () {

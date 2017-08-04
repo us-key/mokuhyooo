@@ -201,41 +201,6 @@ input {
   margin-right: 5px;
 }
 
-/* books */
-div#books {
-  position: static;
-  top: 140px;
-}
-table.table-fixed {
-  width: 100%;
-  table-layout: fixed;
-  th.col1 {
-    width: 88px;
-  }
-  th.col3 {
-    width: 66px;
-  }
-  th.col4 {
-    width: 88px;
-  }
-}
-div{
-  #books {
-    padding-top: 100px;
-  }
-  #top {
-    margin-top: -200px;
-    padding-top: 100px;
-  }
-  .adj {
-    padding-top: 100px;
-  }
-  .jmp-to {
-    margin-top: -200px;
-    padding-top: 100px;
-  }
-}
-
 /* navigation */
 nav.navbar-fixed-top2 {
   position: fixed;
@@ -259,6 +224,7 @@ ul.navbar-nav {
 }
 .form-control {
   font-size: 10px;
+  padding: 1px 2px;
 }
 .panel-body {
   padding: 0px;
@@ -297,6 +263,10 @@ ul.navbar-nav {
 
 .dropdown-menu > li > a {
   padding: 3px 8px;
+}
+
+.table-condensed > tbody > tr > td {
+  padding: 2px;
 }
 
 input[type="checkbox"] {

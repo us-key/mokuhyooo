@@ -10,7 +10,8 @@ var DateParentBox = React.createClass({
     console.log("date_getInitialState()");
     return {
       dateArr: [],
-      items: {}
+      items: {},
+      msg: ""
     };
   },
   componentWillMount() {
@@ -32,6 +33,10 @@ var DateParentBox = React.createClass({
     } else if (this.state.items != nextState.items) {
       // 数値目標のヘッダーが更新された場合rerender
       console.log("date:再描画");
+      return true;
+    } else if (this.state.message != nextState.message) {
+      // メッセージの表示
+      console.log("date:message output")
       return true;
     } else {
       console.log("date:何もしない");
@@ -80,6 +85,21 @@ var DateParentBox = React.createClass({
       }.bind(this)
     });
   },
+  showMsg(message) {
+    console.log("_showMsg")
+    this.setState({
+      msg: message
+    });
+    // メッセージ表示して2秒後に消す
+    $('.date_msg').show();
+    $('.date_msg').delay(1500).fadeOut(500);
+    var clearMsg = setInterval(function() {
+      this.setState({
+        message: ""
+      });
+      clearInterval(clearMsg);
+    }.bind(this), 2000);
+  },
   render () {
     console.log("date_render()");
     console.log(this.state.dateArr.length);
@@ -91,9 +111,10 @@ var DateParentBox = React.createClass({
           url={url}
           target_date={data}
           items={items}
+          showMsg={this.showMsg}
         />
       )
-    });
+    }.bind(this));
     var itemNum = Object.keys(this.state.items).length;
     itemsArr = this.state.items;
     var header = Object.keys(this.state.items).map(function(key, idx) {
@@ -105,9 +126,9 @@ var DateParentBox = React.createClass({
       <div className="row">
         <div className="col-md-12">
           <div className="panel panel-default">
-            <div className="panel-heading">日毎</div>
+            <div className="panel-heading">日毎 <span className="date_msg"> {this.state.msg} </span></div>
             <div className="panel">
-              <table>
+              <table className="table table-condensed table-hover table-striped">
                 <thead>
                 {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
                 }

@@ -91,6 +91,12 @@ class Api::V1::DateTargetsController < ApplicationController
       end
     end
     render 'show', formats: 'json', handlers: 'jbuilder'
+
+  # エラー処理
+  rescue => e
+    logger.error(e)
+    @message = "登録に失敗しました。"
+    render 'show', formats: 'json', handlers: 'jbuilder'
   end
 
   private
