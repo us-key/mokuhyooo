@@ -11,7 +11,16 @@ var DateParentBox = React.createClass({
     return {
       dateArr: [],
       items: {},
-      msg: ""
+      msg: "",
+      qty_target_data: {
+        name: "",
+        target_type: "SUM",
+        quantity_kind: "QU",
+        default_zero_flg: "",
+        sort_order: "",
+        start_date: "",
+        end_date: ""
+      }
     };
   },
   componentWillMount() {
@@ -30,13 +39,13 @@ var DateParentBox = React.createClass({
         !== this.getTargetDate(nextProps.source_date)) {
       console.log("date:再描画");
       return true;
-    } else if (this.state.items != nextState.items) {
-      // 数値目標のヘッダーが更新された場合rerender
+    } else if (this.state != nextState) {
+      // stateが更新された場合rerender
+      // [想定]
+      // 1. 数値目標のヘッダーが更新された場合
+      // 2. メッセージの表示
+      // 3. モーダルダイアログの入力
       console.log("date:再描画");
-      return true;
-    } else if (this.state.message != nextState.message) {
-      // メッセージの表示
-      console.log("date:message output")
       return true;
     } else {
       console.log("date:何もしない");
@@ -75,6 +84,11 @@ var DateParentBox = React.createClass({
     console.log("date_getTargetITem()");
     itemsArr = {};
     // ajaxで数値目標のリストを取得
+    // 形式
+    // {
+    //   "2": {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx},
+    //   "3": {…} // keyは数値目標のソート順
+    // }
     $.ajax({
       url: '/api/v1/date_target_headers.json',
       dataType: 'json',
@@ -100,7 +114,13 @@ var DateParentBox = React.createClass({
       clearInterval(clearMsg);
     }.bind(this), 2000);
   },
-  render () {
+  onClick() {
+    $('#dateTargetModal').modal();
+  },
+  hadnleSubmit() {
+
+  },
+  render() {
     console.log("date_render()");
     console.log(this.state.dateArr.length);
     var url = this.props.url;
@@ -141,7 +161,11 @@ var DateParentBox = React.createClass({
                     <th rowSpan="2">振返り</th>
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
                     }
-                    <th colSpan={itemNum}>数値目標<a href="#">目標を追加する</a></th>
+                    <th colSpan={itemNum}>数値目標
+                      <a onClick={this.onClick}>
+                        <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      </a>
+                    </th>
                   </tr>
                   <tr>
                   {header}
@@ -155,6 +179,75 @@ var DateParentBox = React.createClass({
                   }
                 </tbody>
               </table>
+            </div>
+          </div>
+        </div>
+        {// モーダルダイアログ
+        }
+        <div className="modal fade" id="dateTargetModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
+                <h4 className="modal-title">数値目標登録</h4>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={this.handleSubmit}>
+                  <label htmlFor="name">名前</label>
+                  <input type="text" name="name" value={this.state.qty_target_data.name}
+                         onChange={(e) => {
+                           var newState = this.state;
+                           newState.qty_target_data.name = e.target.value;
+                           this.setState(newState);
+                         }}/>
+                  <br/>
+                  <label htmlFor="target_type">集計方法</label>
+                  <label>合計</label>
+                  <input type="radio" name="target_type" value="SUM"
+                         checked={this.state.qty_target_data.target_type === "SUM"}
+                         onChange={() => {
+                           var newState = this.state;
+                           newState.qty_target_data.target_type = "SUM";
+                           this.setState(newState);
+                         }}/>
+                  <label>平均</label>
+                  <input type="radio" name="target_type" value="AVE"
+                         checked={this.state.qty_target_data.target_type === "AVE"}
+                         onChange={() => {
+                           var newState = this.state;
+                           newState.qty_target_data.target_type = "AVE";
+                           this.setState(newState);
+                         }}/>
+                  <br/>
+                  <label htmlFor="quantity_kind">数値種類</label>
+                  <label>数量</label>
+                  <input type="radio" name="quantity_kind" value="QU"
+                         checked={this.state.qty_target_data.quantity_kind === "QU"}
+                         onChange={() => {
+                           var newState = this.state;
+                           newState.qty_target_data.quantity_kind = "QU";
+                           this.setState(newState);
+                         }}/>
+                  <label>時間</label>
+                  <input type="radio" name="quantity_kind" value="TI"
+                         checked={this.state.qty_target_data.quantity_kind === "TI"}
+                         onChange={() => {
+                           var newState = this.state;
+                           newState.qty_target_data.quantity_kind = "TI";
+                           this.setState(newState);
+                         }}/>
+                  <label>時刻</label>
+                  <input type="radio" name="quantity_kind" value="TD"
+                         checked={this.state.qty_target_data.quantity_kind === "TD"}
+                         onChange={() => {
+                           var newState = this.state;
+                           newState.qty_target_data.quantity_kind = "TD";
+                           this.setState(newState);
+                         }}/>
+                  <br/>
+                  <button type="submit">登録</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>

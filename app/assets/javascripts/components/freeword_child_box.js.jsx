@@ -216,7 +216,7 @@ var FreeWordBox = React.createClass({
       <div className={headerPanelClass}>
         <div className="panel-heading">
           <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
-          <a href="#">
+          <a>
             <span id="register"
                   className="glyphicon glyphicon-save"
                   aria-hidden="true"

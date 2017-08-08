@@ -30,7 +30,7 @@ var DateItemBox = React.createClass({
     // 目標・振り返りはtextarea,他はinputtext
     if ((this.props.target_id == -1) || (this.props.target_id == 0)) {
       return (
-        <td>
+        <td className="commentCol">
          <textarea id={this.props.id}
                 value={this.state.item_value}
             className="form-control"
@@ -40,7 +40,7 @@ var DateItemBox = React.createClass({
       );
     } else {
       return (
-        <td>
+        <td className="qtyCol">
          <input id={this.props.id}
              value={this.state.item_value}
          className="form-control"

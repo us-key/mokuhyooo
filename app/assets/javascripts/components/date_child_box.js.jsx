@@ -108,21 +108,25 @@ var DateChildBox = React.createClass({
     var items = this.props.items;
     var item_values = this.state.item_values;
     var blank = {};
-    // item_idは数値目標のID。個別の入力値のIDではない。目標・振返りには-1,0を設定
+    // target_idは数値目標のID。個別の入力値のIDではない。目標・振返りには-1,0を設定
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
       var item_arr = item_values[key]; // {"target_id": xxx, "id": xxx, "value": xxx}
+      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
+      // TODO 数値目標のタイプとかをDateItemBoxに設定する
       return (
         <DateItemBox
           id = {item_arr["id"]}
           target_id = {item_arr["target_id"]}
           item_value = {item_arr["value"]}
+          type = {header_arr["type"]}
+          kind = {header_arr["kind"]}
         />
       );
     });
     return (
       <tr>
-        <td>
-          <a href="#">
+        <td className="btnCol">
+          <a>
           <span id="register"
                 className="glyphicon glyphicon-save"
                 aria-hidden="true"
@@ -130,7 +134,7 @@ var DateChildBox = React.createClass({
           </span>
         </a>
         </td>
-        <td>
+        <td className="dateCol">
         {target_date}
         </td>
         {// 目標BOX

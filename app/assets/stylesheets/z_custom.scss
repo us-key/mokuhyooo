@@ -269,6 +269,16 @@ ul.navbar-nav {
   padding: 2px;
 }
 
+.btnCol {
+  width: 18px;
+}
+.dateCol {
+  width: 74px;
+}
+.qtyCol {
+  width: 50px;
+}
+
 input[type="checkbox"] {
   // margin-left: -20pxが消せないため調整
   left: 20px;
