@@ -125,7 +125,7 @@ var DateChildBox = React.createClass({
     });
     return (
       <tr>
-        <td className="btnCol">
+        <td>
           <a>
           <span id="register"
                 className="glyphicon glyphicon-save"
@@ -134,7 +134,7 @@ var DateChildBox = React.createClass({
           </span>
         </a>
         </td>
-        <td className="dateCol">
+        <td>
         {target_date}
         </td>
         {// 目標BOX
