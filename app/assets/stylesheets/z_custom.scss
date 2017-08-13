@@ -281,7 +281,9 @@ ul.navbar-nav {
 .qtyCol {
   width: 50px;
 }
-
+.table-responsive > table {
+  table-layout: fixed;
+}
 input[type="checkbox"] {
   // margin-left: -20pxが消せないため調整
   left: 20px;

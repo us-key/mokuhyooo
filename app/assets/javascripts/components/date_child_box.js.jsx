@@ -48,9 +48,9 @@ var DateChildBox = React.createClass({
       }.bind(this)
     });
   },
-  onClick(e) {
+  onSubmit(e) {
     e.preventDefault();
-    console.log("date_child_box:onclick()");
+    console.log("date_child_box:onSubmit()");
     // 行のjQueryオブジェクト取得
     var tr = $(e.target).parent().parent().parent();
     var td = tr.find('td');
@@ -130,7 +130,7 @@ var DateChildBox = React.createClass({
           <span id="register"
                 className="glyphicon glyphicon-save"
                 aria-hidden="true"
-                onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>
+                onClick={e => this.onSubmit(e, this.state.com_id, this.state.comment)}>
           </span>
         </a>
         </td>

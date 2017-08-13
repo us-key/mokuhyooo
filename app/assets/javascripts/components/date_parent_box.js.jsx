@@ -163,7 +163,7 @@ var DateParentBox = React.createClass({
     itemsArr = this.state.items;
     var header = Object.keys(this.state.items).map(function(key, idx) {
       return (
-        <th id={itemsArr[key]["qt_id"]}>{itemsArr[key]["name"]}</th>
+        <th id={itemsArr[key]["qt_id"]} className="qtyCol">{itemsArr[key]["name"]}</th>
       )
     })
     return (
@@ -185,7 +185,7 @@ var DateParentBox = React.createClass({
                     <th rowSpan="2" className="commentCol">振返り</th>
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
                     }
-                    <th colSpan={itemNum} className="qtyCol">数値目標
+                    <th colSpan={itemNum}>数値目標
                       <a onClick={this.showModal}>
                         <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </a>
