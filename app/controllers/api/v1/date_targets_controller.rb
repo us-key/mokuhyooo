@@ -48,22 +48,22 @@ class Api::V1::DateTargetsController < ApplicationController
     logger.debug(params[:date])
     if params[:record].present?
       # hashの値でループ
-      sort_order = 2
+      sort_order = 0
       params[:record].values.each do |rec|
         id = rec["id"]
         val = rec["value"]
-        if sort_order <= 3
-          if sort_order == 2
+        if sort_order <= 1
+          # 目標/振返り
+          if sort_order == 0
             logger.debug("目標")
           else
             logger.debug("振返り")
           end
-          # 目標/振返り
           @comment = nil
           # TODO ユーザーで絞る必要あり！！！
           if (@comment = Freeword.find_by(
                 target_unit: "D",
-                target_review_type: (sort_order == 2 ? "T" : "R"),
+                target_review_type: (sort_order == 0 ? "T" : "R"),
                 record_date: Date.parse(params[:date])
             ))
             logger.debug("更新")
@@ -78,13 +78,34 @@ class Api::V1::DateTargetsController < ApplicationController
               @comment.comment = val
               @comment.target_unit = "D"
               # sort_orderで目標/振返りの判別
-              @comment.target_review_type = (sort_order == 2 ? "T" : "R")
+              @comment.target_review_type = (sort_order == 0 ? "T" : "R")
               @comment.record_date = Date.parse(params[:date])
               @comment.save
             end
           end
         else
           # 数値目標実績
+          target = QuantitativeTarget.find_by(sort_order: sort_order)
+          @performance = nil
+          if (@performance = QuantitativePerformance.find_by(
+                quantitative_target_id: target.id,
+                performance_date: Date.parse(params[:date])
+            ))
+            logger.debug("更新")
+            @performance.performance_value = val
+            @performance.save
+          else
+            logger.debug("新規登録")
+            if val == "" && target.default_zero_flg == "0"
+              # TODO メッセージ出す？default_zero_flg=1の場合はゼロで登録
+            else
+              @performance = QuantitativePerformance.new
+              @performance.quantitative_target_id = target.id
+              @performance.performance_date = Date.parse(params[:date])
+              @performance.performance_value = (0 + val.to_i) # ブランクならゼロで登録
+              @performance.save
+            end
+          end
         end
 
         sort_order += 1

@@ -13,13 +13,16 @@ var DateChildBox = React.createClass({
       item_values: {}
     };
   },
-  componentWillReceiveProps(nextProps) {
-    console.log("date_child_componentWillReceiveProps()");
-    this.getItemValues(nextProps.target_date)
-  },
   componentWillMount() {
     console.log("date_child_componentWillMount()");
     this.getItemValues(this.props.target_date);
+  },
+  componentWillReceiveProps(nextProps) {
+    console.log("date_child_componentWillReceiveProps()");
+    if ((this.props.target_date != nextProps.target_date)
+        || this.props.items != nextProps.items) {
+      this.getItemValues(nextProps.target_date);
+    }
   },
   shouldComponentUpdate(nextProps, nextState) {
     console.log("date_child_shouldComponentUpdate()");
@@ -68,8 +71,9 @@ var DateChildBox = React.createClass({
         console.log(date);
       }
       if (i >= 2) {
-        var id = td.eq(i).children()[0].id;
-        var val = td.eq(i).children()[0].value;
+        var id = td.eq(i).children('.item_value')[0].id;
+        // TODO kindによりvalueの取り方を変える必要あり
+        var val = td.eq(i).children('.item_value')[0].value;
         console.log("id:" + id + ",val:" + val);
         record[i-2]= {"id": id, "value": val};
       }
@@ -111,7 +115,7 @@ var DateChildBox = React.createClass({
     // target_idは数値目標のID。個別の入力値のIDではない。目標・振返りには-1,0を設定
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
       var item_arr = item_values[key]; // {"target_id": xxx, "id": xxx, "value": xxx}
-      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
+      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
       // TODO 数値目標のタイプとかをDateItemBoxに設定する
       return (
         <DateItemBox
@@ -120,6 +124,7 @@ var DateChildBox = React.createClass({
           item_value = {item_arr["value"]}
           type = {header_arr["type"]}
           kind = {header_arr["kind"]}
+          flg = {header_arr["flg"]}
         />
       );
     });

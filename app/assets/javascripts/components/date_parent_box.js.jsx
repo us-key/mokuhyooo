@@ -165,7 +165,10 @@ var DateParentBox = React.createClass({
       return (
         <th id={itemsArr[key]["qt_id"]} className="qtyCol">{itemsArr[key]["name"]}</th>
       )
-    })
+    });
+    var style = {
+      width: itemNum*70 + "px"
+    };
     return (
       <div className="row">
         <div className="col-md-12">
@@ -185,7 +188,7 @@ var DateParentBox = React.createClass({
                     <th rowSpan="2" className="commentCol">振返り</th>
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
                     }
-                    <th colSpan={itemNum}>数値目標
+                    <th colSpan={itemNum} style={style}>数値目標
                       <a onClick={this.showModal}>
                         <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </a>
@@ -277,8 +280,8 @@ var DateParentBox = React.createClass({
                                }}/>
                       </td>
                     </tr>
-                  <button type="submit" className="btn btn-default">登録</button>
                   </table>
+                  <button type="submit" className="btn btn-default">登録</button>
                 </form>
               </div>
             </div>
