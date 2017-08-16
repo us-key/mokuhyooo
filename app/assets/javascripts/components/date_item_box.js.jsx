@@ -31,13 +31,12 @@ var DateItemBox = React.createClass({
     });
   },
   getTime(props) {
-    var hour = 0;
-    var minute = 0;
     if (props.kind && ((props.kind == "TI") || (props.kind == "TD"))) {
-      hour = parseInt(props.item_value / 60);
-      minute = props.item_value % 60;
+      if (props.item_value) {
+        return [props.item_value/60|0, props.item_value%60]
+      }
     }
-    return [hour, minute];
+    return ["", ""];
   },
   shouldComponentUpdate(nextProps, nextState) {
     console.log("date_item_shouldComponentUpdate()");
@@ -45,21 +44,24 @@ var DateItemBox = React.createClass({
     return true;
   },
   onChangeText(e) {
+    e.preventDefault;
     console.log("date_item_onChangeText()");
     this.setState({item_value: e.target.value});
   },
   onChangeHour(e) {
+    e.preventDefault;
     console.log("date_item_onChangeHour()");
     this.setState({
-      base_hour: e.target.value,
-      item_value: this.state.base_minute + e.target.value * 60
+      base_hour: parseInt(e.target.value),
+      item_value: parseInt(this.state.base_minute) + e.target.value * 60
     });
   },
   onChangeMinute(e) {
+    e.preventDefault;
     console.log("date_item_onChangeMinute()");
     this.setState({
-      base_minute: e.target.value,
-      item_value: this.state.base_hour * 60 + e.target.value
+      base_minute: parseInt(e.target.value),
+      item_value: parseInt(this.state.base_hour) * 60 + e.target.value
     });
   },
   render() {
@@ -75,9 +77,9 @@ var DateItemBox = React.createClass({
         </td>
       );
     } else {
-      // TODO kindによって入力コンポーネント切替
-      // ⇒inputを2つ出す場合でも、サーバーに登録する値は隠し項目で持つようにしてそいつを投げる
-      // TODO 初期表示時にどうするかは要検討
+      // kindによって入力コンポーネント切替
+      // ⇒inputを2つ出す場合でも、サーバーに登録する値は隠し項目で持つようにして
+      // そいつを投げる
       if ((this.props.kind == "TI") || (this.props.kind == "TD")) {
         var inputStyle = {
           width: "30px"
@@ -91,11 +93,15 @@ var DateItemBox = React.createClass({
            <input value={this.state.base_hour}
                   style={inputStyle}
                onChange={this.onChangeHour}
-                   type="number"/>:
+                   type="number"
+                    min="0"
+                    max="47"/>:
            <input value={this.state.base_minute}
                   style={inputStyle}
                onChange={this.onChangeMinute}
-                   type="number"/>
+                   type="number"
+                    min="0"
+                    max="59"/>
           </td>
         );
       } else {
@@ -105,7 +111,8 @@ var DateItemBox = React.createClass({
                value={this.state.item_value}
            className="form-control item_value"
             onChange={this.onChangeText}
-                type="number">
+                type="number"
+                 min="0">
            </input>
           </td>
         );
