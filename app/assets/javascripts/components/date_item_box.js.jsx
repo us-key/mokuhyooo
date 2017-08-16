@@ -81,8 +81,10 @@ var DateItemBox = React.createClass({
       // ⇒inputを2つ出す場合でも、サーバーに登録する値は隠し項目で持つようにして
       // そいつを投げる
       if ((this.props.kind == "TI") || (this.props.kind == "TD")) {
+        // form-inlineスタイルの上書き
         var inputStyle = {
-          width: "30px"
+          width: "25px",
+          display: "inherit"
         }
         return (
           <td>
@@ -91,13 +93,16 @@ var DateItemBox = React.createClass({
            className="item_value"
                 type="hidden"/>
            <input value={this.state.base_hour}
+              className="form-control"
                   style={inputStyle}
                onChange={this.onChangeHour}
                    type="number"
                     min="0"
-                    max="47"/>:
+                    max="47"/>
+           ：
            <input value={this.state.base_minute}
                   style={inputStyle}
+              className="form-control"
                onChange={this.onChangeMinute}
                    type="number"
                     min="0"

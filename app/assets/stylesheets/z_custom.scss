@@ -289,6 +289,17 @@ input[type="checkbox"] {
   left: 20px;
 }
 
+// numberのスピンボタンを消す
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  text-align: right;
+}
+
 div.col-md-6, div.col-md-4, div.col-md-12 {
   padding: 0px;
 }
