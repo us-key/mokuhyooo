@@ -61,7 +61,7 @@ var DateItemBox = React.createClass({
     console.log("date_item_onChangeMinute()");
     this.setState({
       base_minute: parseInt(e.target.value),
-      item_value: parseInt(this.state.base_hour) * 60 + e.target.value
+      item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)
     });
   },
   render() {
