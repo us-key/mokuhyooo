@@ -28,13 +28,17 @@ var IndexParent = React.createClass({
     console.log("source_date:" + this.state.source_date);
     return(
       <div className="parent">
-        <div className="pos-center-parent">
+        <div className="pos-horizontal">
           <div className="form-group pos-center">
-            <label className='control-label'>日付</label>
-            <input type="text" id="source_date"
-                   className='form-control datepicker'
-                   value={this.state.source_date}
-                   onBlur={this.onBlur}/>
+            <div className="col-xs-1 col-sm-3"></div>
+            <label className="col-xs-3 col-sm-2 control-label">日付：</label>
+            <div className="col-xs-7 col-sm-4">
+              <input type="text" id="source_date"
+                     className='form-control datepicker'
+                     value={this.state.source_date}
+                     onBlur={this.onBlur}/>
+            </div>
+            <div className="col-xs-1 col-sm-3"></div>
           </div>
         </div>
         <FreewordParentBox

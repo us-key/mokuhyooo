@@ -225,6 +225,10 @@ ul.navbar-nav {
 .form-control {
   font-size: 10px;
   padding: 1px 2px;
+  border: 0px;
+  border-radius: 1px;
+  border-bottom: 1px solid #ccc;
+  background-color: transparent;
 }
 .panel-body {
   padding: 0px;
@@ -300,6 +304,18 @@ input[type=number] {
   text-align: right;
 }
 
-div.col-md-6, div.col-md-4, div.col-md-12 {
+th {
+  text-align: center;
+}
+
+div.col-xs-7, div.col-xs-12, div.col-sm-4
+div.col-md-6, div.col-md-4, div.col-md-12,
+label.col-xs-3, label.col-sm-2 {
   padding: 0px;
+}
+
+label.control-label {
+  text-align: right;
+  vertical-align: middle;
+  padding-right: 10px;
 }
