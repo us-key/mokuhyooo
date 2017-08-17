@@ -44,6 +44,12 @@ class Api::V1::DateTargetsController < ApplicationController
     render 'index', formats: 'json', handlers: 'jbuilder'
   end
 
+  # パラメータで渡されたtarget_date_from/target_date_toを元に目標の集計を行い、
+  # jsonに詰めて返却する
+  # 合計⇒指定された期間での単純加算、平均⇒default_zero_flag=1の場合、単純平均=0の場合、値がnullのレコードは除外
+  def summary
+  end
+
   def create
     logger.debug(params[:date])
     if params[:record].present?

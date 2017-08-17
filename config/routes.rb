@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :freewords
       resources :date_targets
+      get 'date_targets/summary', to: 'date_targets#summary'
       resources :date_target_headers
     end
   end
