@@ -16,7 +16,7 @@ var DateParentBox = React.createClass({
         name: "",
         target_type: "SUM",
         quantity_kind: "QU",
-        default_zero_flg: "",
+        default_zero_flg: false,
         sort_order: "",
         start_date: "",
         end_date: ""
@@ -135,7 +135,9 @@ var DateParentBox = React.createClass({
       data: {
         'name': this.state.qty_target_data.name,
         'target_type': this.state.qty_target_data.target_type,
-        'quantity_kind': this.state.qty_target_data.quantity_kind
+        'quantity_kind': this.state.qty_target_data.quantity_kind,
+        // チェックボックスのbooleanから0/1に置換
+        'default_zero_flg': this.state.qty_target_data.default_zero_flg ? "1" : "0"
       },
       success: function(result) {
         $('#dateTargetModal').modal('hide');
@@ -219,68 +221,85 @@ var DateParentBox = React.createClass({
                 <h4 className="modal-title">数値目標登録</h4>
               </div>
               <div className="modal-body">
-                <form action="javascript:void(0)" onSubmit={this.handleSubmit}>
-                  <table>
-                    <tr>
-                      <td><label htmlFor="name">名前</label></td>
-                      <td><input className="form-control" type="text" name="name" value={this.state.qty_target_data.name}
-                             onChange={(e) => {
+                <form action="javascript:void(0)" onSubmit={this.handleSubmit} className="form-horizontal">
+                  <div className="form-group">
+                    <label className="col-sm-2 control-label" htmlFor="name">名前：</label>
+                    <div className="col-sm-10">
+                      <input className="form-control" type="text" name="name" value={this.state.qty_target_data.name}
+                           onChange={(e) => {
+                             var newState = this.state;
+                             newState.qty_target_data.name = e.target.value;
+                             this.setState(newState);
+                           }}/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-2 control-label" htmlFor="target_type">集計方法：</label>
+                    <div className="col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                      <label>合計</label>
+                      <input type="radio" name="target_type" value="SUM"
+                             checked={this.state.qty_target_data.target_type === "SUM"}
+                             onChange={() => {
                                var newState = this.state;
-                               newState.qty_target_data.name = e.target.value;
+                               newState.qty_target_data.target_type = "SUM";
                                this.setState(newState);
-                             }}/></td>
-                    </tr>
-                    <tr>
-                      <td><label htmlFor="target_type">集計方法</label></td>
-                      <td>
-                        <label>合計</label>
-                        <input type="radio" name="target_type" value="SUM"
-                               checked={this.state.qty_target_data.target_type === "SUM"}
-                               onChange={() => {
-                                 var newState = this.state;
-                                 newState.qty_target_data.target_type = "SUM";
-                                 this.setState(newState);
-                               }}/>
-                        <label>平均</label>
-                        <input type="radio" name="target_type" value="AVE"
-                               checked={this.state.qty_target_data.target_type === "AVE"}
-                               onChange={() => {
-                                 var newState = this.state;
-                                 newState.qty_target_data.target_type = "AVE";
-                                 this.setState(newState);
                              }}/>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><label htmlFor="quantity_kind">数値種類</label></td>
-                      <td>
-                        <label>数量</label>
-                        <input type="radio" name="quantity_kind" value="QU"
-                               checked={this.state.qty_target_data.quantity_kind === "QU"}
-                               onChange={() => {
-                                 var newState = this.state;
-                                 newState.qty_target_data.quantity_kind = "QU";
-                                 this.setState(newState);
-                               }}/>
-                        <label>時間</label>
-                        <input type="radio" name="quantity_kind" value="TI"
-                               checked={this.state.qty_target_data.quantity_kind === "TI"}
-                               onChange={() => {
-                                 var newState = this.state;
-                                 newState.qty_target_data.quantity_kind = "TI";
-                                 this.setState(newState);
-                               }}/>
-                        <label>時刻</label>
-                        <input type="radio" name="quantity_kind" value="TD"
-                               checked={this.state.qty_target_data.quantity_kind === "TD"}
-                               onChange={() => {
-                                 var newState = this.state;
-                                 newState.qty_target_data.quantity_kind = "TD";
-                                 this.setState(newState);
-                               }}/>
-                      </td>
-                    </tr>
-                  </table>
+                      <label>平均</label>
+                      <input type="radio" name="target_type" value="AVE"
+                             checked={this.state.qty_target_data.target_type === "AVE"}
+                             onChange={() => {
+                               var newState = this.state;
+                               newState.qty_target_data.target_type = "AVE";
+                               this.setState(newState);
+                           }}/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-2 control-label" htmlFor="quantity_kind">数値種類：</label>
+                    <div className="col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                      <label>数量</label>
+                      <input type="radio" name="quantity_kind" value="QU"
+                             checked={this.state.qty_target_data.quantity_kind === "QU"}
+                             onChange={() => {
+                               var newState = this.state;
+                               newState.qty_target_data.quantity_kind = "QU";
+                               this.setState(newState);
+                             }}/>
+                      <label>時間</label>
+                      <input type="radio" name="quantity_kind" value="TI"
+                             checked={this.state.qty_target_data.quantity_kind === "TI"}
+                             onChange={() => {
+                               var newState = this.state;
+                               newState.qty_target_data.quantity_kind = "TI";
+                               this.setState(newState);
+                             }}/>
+                      <label>時刻</label>
+                      <input type="radio" name="quantity_kind" value="TD"
+                             checked={this.state.qty_target_data.quantity_kind === "TD"}
+                             onChange={() => {
+                               var newState = this.state;
+                               newState.qty_target_data.quantity_kind = "TD";
+                               this.setState(newState);
+                             }}/>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-sm-offset-2 col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                      <div className="checkbox">
+                        <label>
+                          <input type="checkbox"
+                                 checked={this.state.qty_target_data.default_zero_flg}
+                                 onChange={() => {
+                                   var newState = this.state;
+                                   // フラグを反転させる
+                                   newState.qty_target_data.default_zero_flg = !newState.qty_target_data.default_zero_flg;
+                                   this.setState(newState);
+                                 }}/>
+                          未入力をゼロとみなす
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                   <button type="submit" className="btn btn-default">登録</button>
                 </form>
               </div>

@@ -14,6 +14,7 @@ class Api::V1::DateTargetHeadersController < ApplicationController
     # TODO ソート順：いったん既存の最大+1を登録、ユーザーIDで絞る必要あり
     maxnum = QuantitativeTarget.maximum('sort_order')
     @QT.sort_order = 1 + (maxnum.present? ? maxnum : 1)
+    @QT.default_zero_flg = params[:default_zero_flg]
     # TODO 項目色々足りない
     @QT.save
 
