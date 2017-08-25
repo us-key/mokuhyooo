@@ -164,8 +164,13 @@ var DateParentBox = React.createClass({
     var itemNum = Object.keys(this.state.items).length;
     itemsArr = this.state.items;
     var header = Object.keys(this.state.items).map(function(key, idx) {
+      var type_label = "";
+      switch(itemsArr[key]["type"]) {
+        case "SUM" : type_label = "合計"; break;
+        case "AVE" : type_label = "平均"; break;
+      }
       return (
-        <th id={itemsArr[key]["qt_id"]} className="qtyCol">{itemsArr[key]["name"]}</th>
+        <th id={itemsArr[key]["qt_id"]} className="qtyCol">{itemsArr[key]["name"]}<br/>({type_label})</th>
       )
     });
     var style = {
@@ -204,8 +209,23 @@ var DateParentBox = React.createClass({
                   {// 1週間分の行数用意。日曜～土曜？
                   }
                   {dateNode}
-                  {// 目標の進捗表示行。週・月・年
+                  {// TODO 目標の進捗表示行。週・月・年
                   }
+                  <DateSummaryBox
+                    target_date = {getFirstDate(this.props.source_date, "W", false)}
+                    items = {this.state.items}
+                    unit = "W"
+                  />
+                  <DateSummaryBox
+                    target_date = {getFirstDate(this.props.source_date, "M", false)}
+                    items = {this.state.items}
+                    unit = "M"
+                  />
+                  <DateSummaryBox
+                    target_date = {getFirstDate(this.props.source_date, "Y", false)}
+                    items = {this.state.items}
+                    unit = "Y"
+                  />
                 </tbody>
               </table>
             </div>

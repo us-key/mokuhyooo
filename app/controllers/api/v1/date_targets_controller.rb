@@ -46,10 +46,37 @@ class Api::V1::DateTargetsController < ApplicationController
 
   # パラメータで渡されたtarget_date_from/target_date_toを元に目標の集計を行い、
   # jsonに詰めて返却する
-  # 合計⇒指定された期間での単純加算、平均⇒default_zero_flag=1の場合、単純平均=0の場合、値がnullのレコードは除外
+  # 合計⇒指定された期間での単純加算、平均⇒default_zero_flg=1の場合、単純平均=0の場合、値がnullのレコードは除外
   def summary
+    logger.debug("!!!!!date_targets_controller#summary:start!!!!!")
+    # 数値目標に実績を外部結合
+    qu_pfm = QuantitativeTarget.joins(
+      "LEFT OUTER JOIN quantitative_performances ON quantitative_targets.id = quantitative_performances.quantitative_target_id
+                       and quantitative_performances.performance_date >= '#{Date.strptime(params[:target_date_from], '%Y/%m/%d')}'
+                       and quantitative_performances.performance_date <= '#{Date.strptime(params[:target_date_to], '%Y/%m/%d')}'"
+      ).select("quantitative_targets.id, quantitative_targets.sort_order, quantitative_targets.sort_order, quantitative_targets.quantity_kind,
+                quantitative_performances.performance_value"
+      )
+    if qu_pfm.present?
+      # 目標ごとにグループ
+      @qu_pfm_sum = qu_pfm.group(:id,:sort_order,:target_type,:quantity_kind).sum(:performance_value)
+      # averageの場合、件数でsumを割って平均値を算出する
+      # TODO railsでscalaのfilterみたいなことできたっけ？
+      @qu_pfm_sum.each do |key, value|
+        # 平均の場合、合計値を平均値に置き換える
+        if key[2] == "AVE"
+          count = qu_pfm.where(id: key[0]).size
+          @qu_pfm_sum[key] = value / count
+        end
+        logger.debug("!!!!!date_targets_controller#summary:id:" + key[0].to_s + " sort_order:" + key[1].to_s + " target_type:" + key[2] + " quantity_kind:" + key[3])
+        logger.debug("!!!!!date_targets_controller#summary:value:" + @qu_pfm_sum[key].to_s)
+      end
+    end
+    logger.debug("!!!!!date_targets_controller#summary:end!!!!!")
+    render 'summary', formats: 'json', handlers: 'jbuilder'
   end
 
+  # フリーワード(目標・振り返り)、数値目標の実績を登録する
   def create
     logger.debug(params[:date])
     if params[:record].present?
@@ -97,9 +124,14 @@ class Api::V1::DateTargetsController < ApplicationController
                 quantitative_target_id: target.id,
                 performance_date: Date.parse(params[:date])
             ))
-            logger.debug("更新")
-            @performance.performance_value = val
-            @performance.save
+            if val == "" && target.default_zero_flg == "0"
+              # ゼロを計算対象としない場合、ブランクで更新された場合は作成済のレコードを消す
+              @performance.destroy
+            else
+              logger.debug("更新")
+              @performance.performance_value = val
+              @performance.save
+            end
           else
             logger.debug("新規登録")
             if val == "" && target.default_zero_flg == "0"
@@ -128,6 +160,6 @@ class Api::V1::DateTargetsController < ApplicationController
 
   private
     def date_target_params
-      params.permit(:target_date, :date, :record)
+      params.permit(:target_date, :date, :record, :target_date_from, :target_date_to)
     end
 end
