@@ -1,22 +1,24 @@
 class Api::V1::DateTargetHeadersController < ApplicationController
   def index
-    # TODO ログインユーザーのレコードを取得するよう絞る
-    @qt = QuantitativeTarget.all.order("sort_order")
+    @qt = QuantitativeTarget.where(user_id: current_user.id)
+    if @qt.present?
+      @qt = @qt.order("sort_order")
+    end
     render 'index', formats: 'json', handlers: 'jbuilder'
   end
 
   def create
-    @QT = QuantitativeTarget.new
-    # TODO ユーザーIDの登録
-    @QT.name = params[:name]
-    @QT.target_type = params[:target_type]
-    @QT.quantity_kind = params[:quantity_kind]
-    # TODO ソート順：いったん既存の最大+1を登録、ユーザーIDで絞る必要あり
-    maxnum = QuantitativeTarget.maximum('sort_order')
-    @QT.sort_order = 1 + (maxnum.present? ? maxnum : 1)
-    @QT.default_zero_flg = params[:default_zero_flg]
+    @qt = QuantitativeTarget.new
+    @qt.user_id = current_user.id
+    @qt.name = params[:name]
+    @qt.target_type = params[:target_type]
+    @qt.quantity_kind = params[:quantity_kind]
+    # TODO ソート順：いったん既存の最大+1を登録
+    temp_qt = QuantitativeTarget.find_by(user_id: current_user.id)
+    @qt.sort_order = 1 + (temp_qt.present? ? temp_qt.maximum('sort_order') : 1)
+    @qt.default_zero_flg = params[:default_zero_flg]
     # TODO 項目色々足りない
-    @QT.save
+    @qt.save
 
     render 'show', formats: 'json', handlers: 'jbuilder'
   end

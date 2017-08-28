@@ -206,7 +206,7 @@ var DateParentBox = React.createClass({
                   </tr>
                 </thead>
                 <tbody>
-                  {// 1週間分の行数用意。日曜～土曜？
+                  {// 1週間分の行数用意。月曜～日曜
                   }
                   {dateNode}
                   {// TODO 目標の進捗表示行。週・月・年

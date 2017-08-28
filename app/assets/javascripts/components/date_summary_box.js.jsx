@@ -14,11 +14,7 @@ var DateSummaryBox = React.createClass({
       item_values: {}
     };
   },
-  componentWillMount() {
-    console.log("date_summary_componentWillMount()");
-    this.setTargetDateFromTo(this.props);
-  },
-  setTargetDateFromTo(props) {
+  getTargetDateFromTo(props) {
     console.log("date_summary:props.target_date:" + props.target_date);
     var target_date_from = new Date(props.target_date);
     var target_date_to = new Date(props.target_date);
@@ -41,15 +37,16 @@ var DateSummaryBox = React.createClass({
       target_date_from: target_date_from,
       target_date_to: target_date_to
     });
+    return [target_date_from, target_date_to];
   },
   componentWillReceiveProps(nextProps) {
     console.log("date_summary_componentWillReceiveProps()");
     var prev_target_date_from = this.state.target_date_from
-    this.setTargetDateFromTo(nextProps);
+    var next_target_date_arr = this.getTargetDateFromTo(nextProps);
     // target_date_fromまたはitemsが変わった時のみ再取得
-    if ((this.state.target_date_from != prev_target_date_from.target_date_from)
+    if ((next_target_date_arr[0] != prev_target_date_from)
         || this.props.items != nextProps.items) {
-      this.getItemValues();
+      this.getItemValues(next_target_date_arr);
     }
   },
   shouldComponentUpdate(nextProps, nextState) {
@@ -64,9 +61,9 @@ var DateSummaryBox = React.createClass({
     }
   },
   // target_date_from/toを元に数値目標一覧を受け取りsetStateする
-  getItemValues() {
-    var t_d_from = this.state.target_date_from;
-    var t_d_to = this.state.target_date_to;
+  getItemValues(next_target_date_arr) {
+    var t_d_from = next_target_date_arr[0];
+    var t_d_to = next_target_date_arr[1];
     console.log("date_summary:getItemValues():t_d_from:" + t_d_from);
     console.log("date_summary:getItemValues():t_d_to:" + t_d_to);
     var target_date_from_str =
@@ -86,6 +83,7 @@ var DateSummaryBox = React.createClass({
       },
       success: function(result) {
         console.log("date_summary_ajax(get)");
+        console.log("date_summary_ajax:t_d_from:" + t_d_from);
         this.setState ({
           // result: {{2:{target_id: x, value: xxx}, 3:{target_id:y, value:yyy}}}
           item_values: result

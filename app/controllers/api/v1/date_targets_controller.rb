@@ -2,9 +2,9 @@ class Api::V1::DateTargetsController < ApplicationController
   # パラメータで渡されたtarget_dateを元にその日のフリーワード目標・振り返り、
   # 数値目標を取得し、jsonに詰めて返却する
   def index
-    # TODO ログインユーザーのレコードを取得するよう絞る
     # 目標
     @target = Freeword.find_by(
+      user_id: current_user.id,
       record_date: params[:target_date],
       target_unit: "D",
       target_review_type: "T"
@@ -15,6 +15,7 @@ class Api::V1::DateTargetsController < ApplicationController
     end
     # 振返り
     @review = Freeword.find_by(
+      user_id: current_user.id,
       record_date: params[:target_date],
       target_unit: "D",
       target_review_type: "R"
@@ -24,7 +25,7 @@ class Api::V1::DateTargetsController < ApplicationController
       logger.debug("comment" + @review.comment)
     end
     # 数値目標に実績を外部結合
-    @qu_pfm = QuantitativeTarget.joins(
+    @qu_pfm = QuantitativeTarget.where(user_id: current_user.id).joins(
       "LEFT OUTER JOIN quantitative_performances ON quantitative_targets.id = quantitative_performances.quantitative_target_id
                        and quantitative_performances.performance_date = '#{Date.strptime(params[:target_date], '%Y/%m/%d')}'"
       ).select("quantitative_targets.*,
