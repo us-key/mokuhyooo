@@ -51,7 +51,7 @@ class Api::V1::DateTargetsController < ApplicationController
   def summary
     logger.debug("!!!!!date_targets_controller#summary:start!!!!!")
     # 数値目標に実績を外部結合
-    qu_pfm = QuantitativeTarget.joins(
+    qu_pfm = QuantitativeTarget.where(user_id: current_user.id).joins(
       "LEFT OUTER JOIN quantitative_performances ON quantitative_targets.id = quantitative_performances.quantitative_target_id
                        and quantitative_performances.performance_date >= '#{Date.strptime(params[:target_date_from], '%Y/%m/%d')}'
                        and quantitative_performances.performance_date <= '#{Date.strptime(params[:target_date_to], '%Y/%m/%d')}'"
@@ -94,8 +94,8 @@ class Api::V1::DateTargetsController < ApplicationController
             logger.debug("振返り")
           end
           @comment = nil
-          # TODO ユーザーで絞る必要あり！！！
           if (@comment = Freeword.find_by(
+                user_id: current_user.id,
                 target_unit: "D",
                 target_review_type: (sort_order == 0 ? "T" : "R"),
                 record_date: Date.parse(params[:date])
@@ -109,6 +109,7 @@ class Api::V1::DateTargetsController < ApplicationController
               # TODO メッセージ出す？
             else
               @comment = Freeword.new
+              @comment.user_id = current_user.id
               @comment.comment = val
               @comment.target_unit = "D"
               # sort_orderで目標/振返りの判別
@@ -119,7 +120,10 @@ class Api::V1::DateTargetsController < ApplicationController
           end
         else
           # 数値目標実績
-          target = QuantitativeTarget.find_by(sort_order: sort_order)
+          target = QuantitativeTarget.find_by(
+            user_id: current_user.id,
+            sort_order: sort_order
+            )
           @performance = nil
           if (@performance = QuantitativePerformance.find_by(
                 quantitative_target_id: target.id,
