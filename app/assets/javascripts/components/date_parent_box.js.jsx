@@ -18,7 +18,7 @@ var DateParentBox = React.createClass({
         default_zero_flg: false,
         sort_order: "",
         start_date: "",
-        end_date: getLastDate(this.props.source_date, "YYYY"),
+        end_date: "",
         target_qty: "",
         target_hour: "",
         target_min: ""
@@ -50,6 +50,7 @@ var DateParentBox = React.createClass({
       // 1. 数値目標のヘッダーが更新された場合
       // 2. メッセージの表示
       // 3. モーダルダイアログの入力
+      console.log("rerender")
       return true;
     } else {
       return false;
@@ -121,8 +122,8 @@ var DateParentBox = React.createClass({
         quantity_kind: "QU",
         default_zero_flg: "",
         sort_order: "",
-        start_date: "",
-        end_date: "",
+        start_date: formatDate(new Date(), 'YYYY/MM/DD'),
+        end_date: getLastDate(this.props.source_date, "Y"),
         target_qty: "",
         target_hour: "",
         target_min: ""
@@ -387,6 +388,7 @@ var DateParentBox = React.createClass({
                              type="text"
                              style={{"width":"70px","display":"inline"}}
                              value={this.state.qty_target_data.end_date}
+                             readOnly
                              onBlur={(e) => {
                                console.log("onBlur:" + e.target.value);
                                var newState = this.state;
