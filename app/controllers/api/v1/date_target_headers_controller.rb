@@ -17,7 +17,9 @@ class Api::V1::DateTargetHeadersController < ApplicationController
     temp_qt = QuantitativeTarget.where(user_id: current_user.id)
     @qt.sort_order = 1 + (temp_qt.present? ? temp_qt.maximum('sort_order') : 1)
     @qt.default_zero_flg = params[:default_zero_flg]
-    # TODO 項目色々足りない
+    @qt.start_date = Date.strptime(params[:start_date], '%Y/%m/%d')
+    @qt.end_date = Date.strptime(params[:end_date], '%Y/%m/%d')
+    @qt.target_value = params[:target_value]
     @qt.save
 
     render 'show', formats: 'json', handlers: 'jbuilder'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170731120227) do
+ActiveRecord::Schema.define(version: 20170902072444) do
 
   create_table "freewords", force: :cascade do |t|
     t.integer  "user_id"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20170731120227) do
     t.datetime "updated_at",       null: false
     t.integer  "sort_order"
     t.string   "name"
+    t.integer  "target_value"
   end
 
   create_table "users", force: :cascade do |t|

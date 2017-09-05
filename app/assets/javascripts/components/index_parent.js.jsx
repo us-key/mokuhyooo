@@ -8,7 +8,6 @@ var IndexParent = React.createClass({
     });
   },
   componentDidMount() {
-    console.log("IndexParent_componentDidMount()");
     $('.datepicker').datetimepicker({
       format: "YYYY/MM/DD",
       icons: {
@@ -18,14 +17,11 @@ var IndexParent = React.createClass({
     });
   },
   onBlur(e) {
-    console.log("IndexParent_onBlur()");
     this.setState({
       source_date: e.target.value
     });
   },
   render() {
-    console.log("IndexParent_render()");
-    console.log("source_date:" + this.state.source_date);
     return(
       <div className="parent">
         <div className="pos-horizontal">

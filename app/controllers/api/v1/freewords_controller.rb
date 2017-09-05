@@ -5,10 +5,6 @@ class Api::V1::FreewordsController < ApplicationController
       record_date: Time.zone.parse(params[:record_date]),
       target_unit: params[:target_unit],
       target_review_type: params[:target_review_type])
-    if @data.present?
-      logger.debug("id:" + @data.id.to_s)
-      logger.debug("comment:" + @data.comment)
-    end
 
     render 'index', formats: 'json', handlers: 'jbuilder'
   end

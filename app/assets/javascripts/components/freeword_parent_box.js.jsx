@@ -3,8 +3,6 @@
  */
 var FreewordParentBox = React.createClass({
   render() {
-    console.log("parent_render()");
-    console.log("source_date:" + this.props.source_date);
     return(
       <div className="row">
         <div className="col-xs-12 col-sm-6">

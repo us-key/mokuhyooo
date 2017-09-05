@@ -9,13 +9,11 @@
  */
 var DateSummaryBox = React.createClass({
   getInitialState() {
-    console.log("date_summary_getInitialState()");
     return {
       item_values: {}
     };
   },
   getTargetDateFromTo(props) {
-    console.log("date_summary:props.target_date:" + props.target_date);
     var target_date_from = new Date(props.target_date);
     var target_date_to = new Date(props.target_date);
     switch(props.unit) {
@@ -31,8 +29,6 @@ var DateSummaryBox = React.createClass({
         target_date_to.setDate(target_date_to.getDate() - 1);
         break;
     }
-    console.log("date_summary:target_date_from:" + target_date_from.toString());
-    console.log("date_summary:target_date_to:" + target_date_to.toString());
     this.setState({
       target_date_from: target_date_from,
       target_date_to: target_date_to
@@ -40,7 +36,6 @@ var DateSummaryBox = React.createClass({
     return [target_date_from, target_date_to];
   },
   componentWillReceiveProps(nextProps) {
-    console.log("date_summary_componentWillReceiveProps()");
     var prev_target_date_from = this.state.target_date_from
     var next_target_date_arr = this.getTargetDateFromTo(nextProps);
     // target_date_fromまたはitemsが変わった時のみ再取得
@@ -50,13 +45,10 @@ var DateSummaryBox = React.createClass({
     }
   },
   shouldComponentUpdate(nextProps, nextState) {
-    console.log("date_summary_shouldComponentUpdate()");
     // ajax結果でsetStateされたら再描画
     if (this.state.item_values != nextState.item_values) {
-      console.log("date_summary:再描画");
       return true;
     } else {
-      console.log("date_summary:何もしない");
       return false;
     }
   },
@@ -64,8 +56,6 @@ var DateSummaryBox = React.createClass({
   getItemValues(next_target_date_arr) {
     var t_d_from = next_target_date_arr[0];
     var t_d_to = next_target_date_arr[1];
-    console.log("date_summary:getItemValues():t_d_from:" + t_d_from);
-    console.log("date_summary:getItemValues():t_d_to:" + t_d_to);
     var target_date_from_str =
       [t_d_from.getFullYear(),
        t_d_from.getMonth()+1,
@@ -82,8 +72,6 @@ var DateSummaryBox = React.createClass({
         target_date_to: target_date_to_str
       },
       success: function(result) {
-        console.log("date_summary_ajax(get)");
-        console.log("date_summary_ajax:t_d_from:" + t_d_from);
         this.setState ({
           // result: {{2:{target_id: x, value: xxx}, 3:{target_id:y, value:yyy}}}
           item_values: result
@@ -92,7 +80,6 @@ var DateSummaryBox = React.createClass({
     });
   },
   render () {
-    console.log("date_summary_render()");
     var items = this.props.items;
     var item_values = this.state.item_values;
     var blank = {};
@@ -102,7 +89,6 @@ var DateSummaryBox = React.createClass({
       case 'M' : summary_label += "月)"; break;
       case 'Y' : summary_label += "年)"; break;
     }
-    console.log("summary_label" + summary_label);
     // target_idは数値目標のID。
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
       var item_arr = item_values[key]; // {"target_id": xxx, "value": xxx}
@@ -111,14 +97,14 @@ var DateSummaryBox = React.createClass({
       if (header_arr["kind"] == "TI" || header_arr["kind"] == "TD") {
         return (
           // 時間・時刻：中央揃え
-          <td style={{"text-align":"center"}}>
+          <td style={{"textAlign":"center"}}>
             {("00" + (item_arr["value"]/60|0)).substr(-2)}：{("00" + (item_arr["value"]%60)).substr(-2)}
           </td>
         );
       } else {
         return (
           // 数量：右寄せ
-          <td style={{"text-align":"right"}}>
+          <td style={{"textAlign":"right"}}>
             {item_arr["value"]}
           </td>
         );
@@ -126,7 +112,7 @@ var DateSummaryBox = React.createClass({
     });
     return (
       <tr>
-        <td colSpan="4" style={{"text-align":"center"}}>
+        <td colSpan="4" style={{"textAlign":"center"}}>
           {summary_label}
         </td>
         {// 目標BOX

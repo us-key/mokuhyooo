@@ -7,7 +7,6 @@
  */
 var DateParentBox = React.createClass({
   getInitialState() {
-    console.log("date_getInitialState()");
     return {
       dateArr: [],
       items: {},
@@ -19,25 +18,31 @@ var DateParentBox = React.createClass({
         default_zero_flg: false,
         sort_order: "",
         start_date: "",
-        end_date: ""
+        end_date: getLastDate(this.props.source_date, "YYYY"),
+        target_qty: "",
+        target_hour: "",
+        target_min: ""
       }
     };
   },
+  changeStartDate(e) {
+    this.setState()
+  },
+  componentDidMount() {
+    addEventListener('onChangeStartDate', this.changeStartDate);
+    addEventListener('onChangeEndDate', this.changeEndDate);
+  },
   componentWillMount() {
-    console.log("date_componentWillMount()");
     this.getDate(this.getTargetDate(this.props.source_date));
     this.getTargetItem();
   },
   componentWillReceiveProps(nextProps) {
-    console.log("date_componentWillReceiveProps()");
     this.getDate(this.getTargetDate(nextProps.source_date));
   },
   shouldComponentUpdate(nextProps, nextState) {
-    console.log("date_shouldComponentUpdate()");
     // 週が変わった場合、rerender(componentWillReceicePropsで取得した週の日付で再描画)
     if (this.getTargetDate(this.props.source_date)
         !== this.getTargetDate(nextProps.source_date)) {
-      console.log("date:再描画");
       return true;
     } else if (this.state != nextState) {
       // stateが更新された場合rerender
@@ -45,22 +50,21 @@ var DateParentBox = React.createClass({
       // 1. 数値目標のヘッダーが更新された場合
       // 2. メッセージの表示
       // 3. モーダルダイアログの入力
-      console.log("date:再描画");
       return true;
     } else {
-      console.log("date:何もしない");
       return false;
     }
   },
+  componentWillUnmount() {
+    removeEventListener('onChangeStartDate', this.changeStartDate);
+    removeEventListener('onChangeEndDate', this.changeEndDate);
+  },
   getTargetDate(sourceDate) {
-    console.log("date_getTargetDate()");
     // 週の初日を得る
     return getFirstDate(sourceDate, "W", false);
   },
   // 週の初日を元に1週間の日付を算出し配列に詰める
   getDate(firstDay) {
-    console.log("date_getDateValue()");
-    console.log("target_date:" + firstDay);
     var dt = new Date(firstDay);
     // 日付をキー、データの連想配列を要素とした連想配列(1件ずつ配列に詰める)
     // 作成した連想配列を詰める配列
@@ -71,14 +75,12 @@ var DateParentBox = React.createClass({
                   + "/" + ("0" + dt.getDate()).slice(-2);
       // 後でレコードとセットの配列に詰めるために配列にセットしておく
       dateArr.push(dtKey);
-      console.log("dateArr.push:" + dtKey);
       dt.setDate(dt.getDate() + 1);
     }
     this.setState({dateArr : dateArr});
   },
   // ユーザーごとの数値目標項目を取得する
   getTargetItem() {
-    console.log("date_getTargetITem()");
     itemsArr = {};
     // ajaxで数値目標のリストを取得
     // 形式
@@ -97,7 +99,6 @@ var DateParentBox = React.createClass({
     });
   },
   showMsg(message) {
-    console.log("_showMsg")
     this.setState({
       msg: message
     });
@@ -121,13 +122,15 @@ var DateParentBox = React.createClass({
         default_zero_flg: "",
         sort_order: "",
         start_date: "",
-        end_date: ""
+        end_date: "",
+        target_qty: "",
+        target_hour: "",
+        target_min: ""
       }
     });
     $('#dateTargetModal').modal();
   },
   handleSubmit() {
-    console.log("date_handleSubmit()");
     $.ajax({
       url: 'api/v1/date_target_headers.json',
       type: 'POST',
@@ -137,7 +140,13 @@ var DateParentBox = React.createClass({
         'target_type': this.state.qty_target_data.target_type,
         'quantity_kind': this.state.qty_target_data.quantity_kind,
         // チェックボックスのbooleanから0/1に置換
-        'default_zero_flg': this.state.qty_target_data.default_zero_flg ? "1" : "0"
+        'default_zero_flg': this.state.qty_target_data.default_zero_flg ? "1" : "0",
+        'start_date': this.state.qty_target_data.start_date,
+        'end_date': this.state.qty_target_data.end_date,
+        'target_value':
+            (this.state.qty_target_data.quantity_kind == 'QU')
+            ? this.state.qty_target_data.target_qty
+            : parseInt(this.state.qty_target_data.target_hour) * 60 + parseInt(this.state.qty_target_data.target_min)
       },
       success: function(result) {
         $('#dateTargetModal').modal('hide');
@@ -147,8 +156,6 @@ var DateParentBox = React.createClass({
     });
   },
   render() {
-    console.log("date_render()");
-    console.log(this.state.dateArr.length);
     var url = this.props.url;
     var items = this.state.items;
     var dateNode = this.state.dateArr.map(function(data) {
@@ -176,6 +183,37 @@ var DateParentBox = React.createClass({
     var style = {
       width: itemNum*70 + "px"
     };
+    var quTargetInput =
+      <input className="form-control"
+             type="number"
+             style={{"width":"50px","display":"inline"}}
+             onChange={(e) => {
+               var newState = this.state;
+               newState.qty_target_data.target_qty = e.target.value;
+               this.setState(newState);
+             }}/>
+    ;
+    var tiTdTargetInput =
+      <div>
+      <input className="form-control"
+             type="number"
+             style={{"width":"25px","display":"inline"}}
+             onChange={(e) => {
+               var newState = this.state;
+               newState.qty_target_data.target_hour = e.target.value;
+               this.setState(newState);
+             }}/>
+      ：
+      <input className="form-control"
+             type="number"
+             style={{"width":"25px","display":"inline"}}
+             onChange={(e) => {
+               var newState = this.state;
+               newState.qty_target_data.target_min = e.target.value;
+               this.setState(newState);
+             }}/>
+      </div>
+    ;
     return (
       <div className="row">
         <div className="col-md-12">
@@ -250,12 +288,13 @@ var DateParentBox = React.createClass({
                              var newState = this.state;
                              newState.qty_target_data.name = e.target.value;
                              this.setState(newState);
-                           }}/>
+                           }}
+                           required/>
                     </div>
                   </div>
                   <div className="form-group">
                     <label className="col-sm-2 control-label" htmlFor="target_type">集計方法：</label>
-                    <div className="col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                    <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
                       <label>合計</label>
                       <input type="radio" name="target_type" value="SUM"
                              checked={this.state.qty_target_data.target_type === "SUM"}
@@ -276,7 +315,7 @@ var DateParentBox = React.createClass({
                   </div>
                   <div className="form-group">
                     <label className="col-sm-2 control-label" htmlFor="quantity_kind">数値種類：</label>
-                    <div className="col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                    <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
                       <label>数量</label>
                       <input type="radio" name="quantity_kind" value="QU"
                              checked={this.state.qty_target_data.quantity_kind === "QU"}
@@ -304,7 +343,7 @@ var DateParentBox = React.createClass({
                     </div>
                   </div>
                   <div className="form-group">
-                    <div className="col-sm-offset-2 col-sm-10" style={{"vertical-align": "middle"},{"padding-top": "7px"}}>
+                    <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
                       <div className="checkbox">
                         <label>
                           <input type="checkbox"
@@ -318,6 +357,42 @@ var DateParentBox = React.createClass({
                           未入力をゼロとみなす
                         </label>
                       </div>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-2 control-label">１日あたり：</label>
+                    <div className="col-sm-10">
+                      {(this.state.qty_target_data.quantity_kind === "QU") ?
+                        quTargetInput
+                        :
+                        tiTdTargetInput
+                      }
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="col-sm-2 control-label" htmlFor="name">期間：</label>
+                    <div className="col-sm-10">
+                      <input className="form-control datepicker"
+                             type="text"
+                             style={{"width":"70px","display":"inline"}}
+                             value={this.state.qty_target_data.start_date}
+                             onBlur={(e) => {
+                               console.log("onBlur:" + e.target.value);
+                               var newState = this.state;
+                               newState.qty_target_data.start_date = e.target.value;
+                               this.setState(newState);
+                             }}/>
+                      ～
+                      <input className="form-control datepicker"
+                             type="text"
+                             style={{"width":"70px","display":"inline"}}
+                             value={this.state.qty_target_data.end_date}
+                             onBlur={(e) => {
+                               console.log("onBlur:" + e.target.value);
+                               var newState = this.state;
+                               newState.qty_target_data.end_date = e.target.value;
+                               this.setState(newState);
+                             }}/>
                     </div>
                   </div>
                   <button type="submit" className="btn btn-default">登録</button>

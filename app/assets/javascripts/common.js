@@ -57,7 +57,6 @@ var addDate = function (date, num, interval) {
  * @return {String}
  */
 var getFirstDate = function(source_date, unit, prev_flg) {
-  console.log(unit+"_getFirstDate()");
 
   var dt = new Date(source_date);
   switch(unit) {
@@ -76,7 +75,35 @@ var getFirstDate = function(source_date, unit, prev_flg) {
         dt.setDate(dt.getDate() - 7);
       }
       // source_dateから曜日の日数(日：0 月：1 … 土：6 …getDay()で取得)を引く
-      dt.setDate(dt.getDate() - (dt.getDay()-1)%7);
+      dt.setDate(dt.getDate() - (dt.getDay())%7);
+      return (dt.getFullYear() + "/" + ("0"+ (dt.getMonth() + 1)).slice(-2)
+        + "/" + ("0"+ dt.getDate()).slice(-2));
+    default :
+      return "";
+  }
+}
+
+/**
+ * 年・月・週の最終日を取得する
+ * @param  {String}  source_date 計算元日付 YYYY/MM/DD
+ * @param  {String}  unit        単位(Y:年、M:月、W:週)
+ * @return {String}
+ */
+var getLastDate = function(source_date, unit) {
+
+  var dt = new Date(source_date);
+  switch(unit) {
+    case "Y" :
+      // その年の12月31日
+      return (dt.getFullYear() + "/12/31");
+    case "M" :
+      // 翌月初日の前日
+    　dt.setDate(getFirstDate(new Date(addDate(dt, 1, "MM"))) -1)
+      return (dt.getFullYear() + "/" + ("0"+(dt.getMonth() + 1)).slice(-2) + "/"
+               + ("0" + dt.getDate()).slice(-2));
+    case "W" :
+      // source_dateから土曜までの日数(日：6 月：5 … 土：0 …6-getDay()で取得)を引く
+      dt.setDate(dt.getDate() - (6-(dt.getDay())%7));
       return (dt.getFullYear() + "/" + ("0"+ (dt.getMonth() + 1)).slice(-2)
         + "/" + ("0"+ dt.getDate()).slice(-2));
     default :

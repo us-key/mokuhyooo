@@ -13,7 +13,6 @@
  */
 var DateItemBox = React.createClass({
   getInitialState() {
-    console.log("date_item_getInitialState()");
     var time = this.getTime(this.props);
     return {
       item_value: this.props.item_value,
@@ -22,7 +21,6 @@ var DateItemBox = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    console.log("date_child_componentWillReceiveProps()");
     var time = this.getTime(nextProps);
     this.setState({
       item_value: nextProps.item_value,
@@ -39,18 +37,15 @@ var DateItemBox = React.createClass({
     return ["", ""];
   },
   shouldComponentUpdate(nextProps, nextState) {
-    console.log("date_item_shouldComponentUpdate()");
     // 一旦常に再描画
     return true;
   },
   onChangeText(e) {
     e.preventDefault;
-    console.log("date_item_onChangeText()");
     this.setState({item_value: e.target.value});
   },
   onChangeHour(e) {
     e.preventDefault;
-    console.log("date_item_onChangeHour()");
     this.setState({
       base_hour: parseInt(e.target.value),
       item_value: parseInt(this.state.base_minute) + e.target.value * 60
@@ -58,7 +53,6 @@ var DateItemBox = React.createClass({
   },
   onChangeMinute(e) {
     e.preventDefault;
-    console.log("date_item_onChangeMinute()");
     this.setState({
       base_minute: parseInt(e.target.value),
       item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)

@@ -10,7 +10,6 @@ var FreewordChildBox = React.createClass({
    * target_date,base_target_dateにprops.source_dateをセット
    */
   getInitialState() {
-    console.log(this.props.unit+"_getInitialState()");
     return {
       data: [],
       target_date: this.props.source_date,
@@ -23,18 +22,12 @@ var FreewordChildBox = React.createClass({
    * source_dateを元にtarget_date算出
    */
   componentWillMount() {
-    console.log(this.props.unit+"_componentWillMount()");
     this.update_target_date(this.props.source_date);
-    console.log(this.state.target_date);
-    console.log(this.state.prev_date);
   },
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.unit+"_componentWillReceiveProps()");
-    console.log(this.props.unit+":nextProps.source_date:" + nextProps.source_date);
     this.update_target_date(nextProps.source_date);
   },
   update_target_date(source_date) {
-    console.log(this.props.unit+"_update_target_date()");
     // 初日
     var dt = new Date(source_date);
     var prev_dt = dt;
@@ -45,7 +38,6 @@ var FreewordChildBox = React.createClass({
 
   },
   render() {
-    console.log(this.props.unit+"_render()");
     return(
       <div>
         <FreeWordBox
@@ -79,7 +71,6 @@ var FreewordChildBox = React.createClass({
 
 var FreeWordBox = React.createClass({
   getInitialState() {
-    console.log(this.props.prefix+"_getInitialState()");
     return {
       com_id:"",
       comment:"",
@@ -87,28 +78,21 @@ var FreeWordBox = React.createClass({
     };
   },
   componentWillMount() {
-    console.log(this.props.prefix+"_componentWillMount()");
     this.getComment(this.props.target_date);
   },
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(this.props.prefix+"shouldComponentUpdate()");
     // props.target_dateが変更された場合、getComment呼出(ajax)
     // state(com_id/comment/message)が変更された場合(getComment/onClickのajax結果)、rerender
     if (this.props.target_date !== nextProps.target_date) {
-      console.log(this.props.prefix+":再取得");
       this.getComment(nextProps.target_date);
       return false;
     } else if (this.state !== nextState) {
-      console.log(this.props.prefix+":再描画");
       return true;
     } else {
-      console.log(this.props.prefix+":何もしない");
       return false;
     }
   },
   getComment(target_date) {
-    console.log(this.props.prefix+"_getComment()")
-    console.log(this.props.prefix+":target_date:"+ target_date);
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -118,8 +102,6 @@ var FreeWordBox = React.createClass({
         target_review_type: this.props.type
       },
       success: function(result) {
-        console.log(this.props.prefix+"_id:" + result.id);
-        console.log(this.props.prefix+"_comment:" + result.comment);
         this.setState({
           // undefinedの場合ブランクを設定
           com_id: result.id ? result.id : "",
@@ -132,14 +114,10 @@ var FreeWordBox = React.createClass({
     });
   },
   onChangeText(e) {
-    console.log(this.props.prefix+"_onChangeText()");
     this.setState({comment: e.target.value});
   },
   onClick(e, com_id, comment) {
     e.preventDefault();
-    console.log(this.props.prefix+"_onClick()");
-    console.log("id:"+com_id);
-    console.log("comment:"+comment);
     $.ajax({
       url: this.props.url,
       type: 'POST',
@@ -152,7 +130,6 @@ var FreeWordBox = React.createClass({
         'record_date': this.props.target_date
       },
       success: function(result) {
-        console.log(this.props.prefix+"_Result" + result.message);
         this.setState({
           message: result.message
         });
@@ -178,8 +155,6 @@ var FreeWordBox = React.createClass({
     });
   },
   render() {
-    console.log(this.props.prefix+"_render()");
-    console.log(this.props.prefix+":target_date:"+this.props.target_date);
     const toggleTarget = "#" + this.props.prefix + "_panel";
     const panelId = this.props.prefix + "_panel";
     var panelClass = "panel collapse";
