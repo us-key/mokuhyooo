@@ -130,7 +130,7 @@ var DateParentBox = React.createClass({
               start_date: result.start_date ? result.start_date.replace(/-/g, '/') : formatDate(new Date(), 'YYYY/MM/DD'),
               end_date: result.end_date ? result.end_date.replace(/-/g, '/') : getLastDate(this.props.source_date, "Y"),
               target_qty: (result.quantity_kind == 'QU') ? result.target_value : "",
-              target_hour: (result.quantity_kind != 'QU') ? parseInt(result.target_value)/60 : "",
+              target_hour: (result.quantity_kind != 'QU') ? parseInt(result.target_value)/60|0 : "",
               target_min: (result.quantity_kind != 'QU') ? parseInt(result.target_value)%60 : "",
               created_at: result.created_at.substring(0,10).replace(/-/g, '/')
             }

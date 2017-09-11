@@ -27,7 +27,7 @@ class Api::V1::DateTargetHeadersController < ApplicationController
     @qt.default_zero_flg = params[:default_zero_flg]
     @qt.start_date = Date.strptime(params[:start_date], '%Y/%m/%d')
     @qt.end_date = Date.strptime(params[:end_date], '%Y/%m/%d')
-    @qt.target_value = params[:target_value]
+    @qt.target_value = params[:target_value].to_i
     @qt.save
 
     render 'show', formats: 'json', handlers: 'jbuilder'
