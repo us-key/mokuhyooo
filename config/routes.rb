@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :date_targets
       get 'date_targets_summary', to: 'date_targets#summary'
       resources :date_target_headers
+      get 'date_target_headers_get', to: 'date_target_headers#get'
     end
   end
 end

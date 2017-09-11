@@ -12,6 +12,7 @@ var DateParentBox = React.createClass({
       items: {},
       msg: "",
       qty_target_data: {
+        mode: "",
         name: "",
         target_type: "SUM",
         quantity_kind: "QU",
@@ -21,16 +22,13 @@ var DateParentBox = React.createClass({
         end_date: "",
         target_qty: "",
         target_hour: "",
-        target_min: ""
+        target_min: "",
+        created_at: ""
       }
     };
   },
   changeStartDate(e) {
     this.setState()
-  },
-  componentDidMount() {
-    addEventListener('onChangeStartDate', this.changeStartDate);
-    addEventListener('onChangeEndDate', this.changeEndDate);
   },
   componentWillMount() {
     this.getDate(this.getTargetDate(this.props.source_date));
@@ -55,10 +53,6 @@ var DateParentBox = React.createClass({
     } else {
       return false;
     }
-  },
-  componentWillUnmount() {
-    removeEventListener('onChangeStartDate', this.changeStartDate);
-    removeEventListener('onChangeEndDate', this.changeEndDate);
   },
   getTargetDate(sourceDate) {
     // 週の初日を得る
@@ -113,22 +107,55 @@ var DateParentBox = React.createClass({
       clearInterval(clearMsg);
     }.bind(this), 2000);
   },
-  showModal() {
-    // 初期化
-    this.setState({
-      qty_target_data: {
-        name: "",
-        target_type: "SUM",
-        quantity_kind: "QU",
-        default_zero_flg: "",
-        sort_order: "",
-        start_date: formatDate(new Date(), 'YYYY/MM/DD'),
-        end_date: getLastDate(this.props.source_date, "Y"),
-        target_qty: "",
-        target_hour: "",
-        target_min: ""
-      }
-    });
+  showModal(e,key) {
+    e.preventDefault;
+    if (key) {
+      // ヘッダーの属性を取得する
+      $.ajax({
+        url: '/api/v1/date_target_headers_get.json',
+        dataType: 'json',
+        data: {
+          'sort_order': key
+        },
+        async: false,
+        success: function(result) {
+          this.setState({
+            qty_target_data: {
+              mode: "U",
+              name: result.name,
+              target_type: result.target_type,
+              quantity_kind: result.quantity_kind,
+              default_zero_flg: (result.default_zero_flg==1),
+              sort_order: key,
+              start_date: result.start_date ? result.start_date.replace(/-/g, '/') : formatDate(new Date(), 'YYYY/MM/DD'),
+              end_date: result.end_date ? result.end_date.replace(/-/g, '/') : getLastDate(this.props.source_date, "Y"),
+              target_qty: (result.quantity_kind == 'QU') ? result.target_value : "",
+              target_hour: (result.quantity_kind != 'QU') ? parseInt(result.target_value)/60 : "",
+              target_min: (result.quantity_kind != 'QU') ? parseInt(result.target_value)%60 : "",
+              created_at: result.created_at.substring(0,10).replace(/-/g, '/')
+            }
+          });
+        }.bind(this)
+      });
+    } else {
+      // 初期化
+      this.setState({
+        qty_target_data: {
+          mode: "C",
+          name: "",
+          target_type: "SUM",
+          quantity_kind: "QU",
+          default_zero_flg: "",
+          sort_order: "",
+          start_date: formatDate(new Date(), 'YYYY/MM/DD'),
+          end_date: getLastDate(this.props.source_date, "Y"),
+          target_qty: "",
+          target_hour: "",
+          target_min: "",
+          created_at: ""
+        }
+      });
+    }
     $('#dateTargetModal').modal();
   },
   handleSubmit() {
@@ -137,6 +164,7 @@ var DateParentBox = React.createClass({
       type: 'POST',
       dataType: 'json',
       data: {
+        'mode': this.state.qty_target_data.mode,
         'name': this.state.qty_target_data.name,
         'target_type': this.state.qty_target_data.target_type,
         'quantity_kind': this.state.qty_target_data.quantity_kind,
@@ -144,6 +172,7 @@ var DateParentBox = React.createClass({
         'default_zero_flg': this.state.qty_target_data.default_zero_flg ? "1" : "0",
         'start_date': this.state.qty_target_data.start_date,
         'end_date': this.state.qty_target_data.end_date,
+        'sort_order': this.state.qty_target_data.sort_order,
         'target_value':
             (this.state.qty_target_data.quantity_kind == 'QU')
             ? this.state.qty_target_data.target_qty
@@ -178,9 +207,9 @@ var DateParentBox = React.createClass({
         case "AVE" : type_label = "平均"; break;
       }
       return (
-        <th id={itemsArr[key]["qt_id"]} className="qtyCol">{itemsArr[key]["name"]}<br/>({type_label})</th>
+        <th id={itemsArr[key]["qt_id"]} className="qtyCol"><a onClick={(e) => this.showModal(e,key)}>{itemsArr[key]["name"]}<br/>({type_label})</a></th>
       )
-    });
+    }.bind(this));
     var style = {
       width: itemNum*70 + "px"
     };
@@ -188,6 +217,7 @@ var DateParentBox = React.createClass({
       <input className="form-control"
              type="number"
              style={{"width":"50px","display":"inline"}}
+             value={this.state.qty_target_data.target_qty}
              onChange={(e) => {
                var newState = this.state;
                newState.qty_target_data.target_qty = e.target.value;
@@ -199,6 +229,7 @@ var DateParentBox = React.createClass({
       <input className="form-control"
              type="number"
              style={{"width":"25px","display":"inline"}}
+             value={this.state.qty_target_data.target_hour}
              onChange={(e) => {
                var newState = this.state;
                newState.qty_target_data.target_hour = e.target.value;
@@ -208,6 +239,7 @@ var DateParentBox = React.createClass({
       <input className="form-control"
              type="number"
              style={{"width":"25px","display":"inline"}}
+             value={this.state.qty_target_data.target_min}
              onChange={(e) => {
                var newState = this.state;
                newState.qty_target_data.target_min = e.target.value;
@@ -235,7 +267,7 @@ var DateParentBox = React.createClass({
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
                     }
                     <th colSpan={itemNum} style={style}>数値目標
-                      <a onClick={this.showModal}>
+                      <a onClick={(e)=> this.showModal(e,null)}>
                         <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
                       </a>
                     </th>
@@ -320,6 +352,7 @@ var DateParentBox = React.createClass({
                       <label>数量</label>
                       <input type="radio" name="quantity_kind" value="QU"
                              checked={this.state.qty_target_data.quantity_kind === "QU"}
+                             disabled={this.state.qty_target_data.mode === "U"}
                              onChange={() => {
                                var newState = this.state;
                                newState.qty_target_data.quantity_kind = "QU";
@@ -328,6 +361,7 @@ var DateParentBox = React.createClass({
                       <label>時間</label>
                       <input type="radio" name="quantity_kind" value="TI"
                              checked={this.state.qty_target_data.quantity_kind === "TI"}
+                             disabled={this.state.qty_target_data.mode === "U"}
                              onChange={() => {
                                var newState = this.state;
                                newState.qty_target_data.quantity_kind = "TI";
@@ -336,6 +370,7 @@ var DateParentBox = React.createClass({
                       <label>時刻</label>
                       <input type="radio" name="quantity_kind" value="TD"
                              checked={this.state.qty_target_data.quantity_kind === "TD"}
+                             disabled={this.state.qty_target_data.mode === "U"}
                              onChange={() => {
                                var newState = this.state;
                                newState.qty_target_data.quantity_kind = "TD";
@@ -397,6 +432,7 @@ var DateParentBox = React.createClass({
                              }}/>
                     </div>
                   </div>
+                  <div>作成日：{this.state.qty_target_data.created_at}</div>
                   <button type="submit" className="btn btn-default">登録</button>
                 </form>
               </div>
