@@ -41,11 +41,12 @@ class Api::V1::DateTargetsController < ApplicationController
                        and quantitative_performances.performance_date >= '#{Date.strptime(params[:target_date_from], '%Y/%m/%d')}'
                        and quantitative_performances.performance_date <= '#{Date.strptime(params[:target_date_to], '%Y/%m/%d')}'"
       ).select("quantitative_targets.id, quantitative_targets.sort_order, quantitative_targets.sort_order, quantitative_targets.quantity_kind,
-                quantitative_performances.performance_value"
+                quantitative_performances.performance_value, quantitative_targets.target_value"
       )
+    @qu_pfm_percent = {}
     if qu_pfm.present?
       # 目標ごとにグループ
-      @qu_pfm_sum = qu_pfm.group(:id,:sort_order,:target_type,:quantity_kind).sum(:performance_value)
+      @qu_pfm_sum = qu_pfm.group(:id,:sort_order,:target_type,:quantity_kind,:target_value).sum(:performance_value)
       # averageの場合、件数でsumを割って平均値を算出する
       # TODO railsでscalaのfilterみたいなことできたっけ？
       @qu_pfm_sum.each do |key, value|
@@ -53,6 +54,10 @@ class Api::V1::DateTargetsController < ApplicationController
         if key[2] == "AVE"
           count = qu_pfm.where(id: key[0]).size
           @qu_pfm_sum[key] = value / count
+          @qu_pfm_percent[key] = ((value.to_f / key[4].to_f)*100).round(1) #目標値に対する実績のパーセント
+        else
+          date_cnt = Date.strptime(params[:target_date_to], '%Y/%m/%d') - Date.strptime(params[:target_date_from], '%Y/%m/%d') + 1
+          @qu_pfm_percent[key] = ((value.to_f / ((key[4]*date_cnt).to_f))*100).round(1)
         end
       end
     end

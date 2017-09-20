@@ -13,5 +13,6 @@
   json.set! key[1] do
     json.target_id key[0]
     json.value value
+    json.percent @qu_pfm_percent[key]
   end
 end

@@ -91,7 +91,7 @@ var DateSummaryBox = React.createClass({
     }
     // target_idは数値目標のID。
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
-      var item_arr = item_values[key]; // {"target_id": xxx, "value": xxx}
+      var item_arr = item_values[key]; // {"target_id": xxx, "value": xxx, "percent": xxx}
       var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
       // 数値目標のタイプをDateItemBoxに設定する
       if (header_arr["kind"] == "TI" || header_arr["kind"] == "TD") {
@@ -99,6 +99,8 @@ var DateSummaryBox = React.createClass({
           // 時間・時刻：中央揃え
           <td style={{"textAlign":"center"}}>
             {("00" + (item_arr["value"]/60|0)).substr(-2)}：{("00" + (item_arr["value"]%60)).substr(-2)}
+            <br/>
+            {item_arr["percent"]}%
           </td>
         );
       } else {
@@ -106,6 +108,8 @@ var DateSummaryBox = React.createClass({
           // 数量：右寄せ
           <td style={{"textAlign":"right"}}>
             {item_arr["value"]}
+            <br/>
+            {item_arr["percent"]}%
           </td>
         );
       }
