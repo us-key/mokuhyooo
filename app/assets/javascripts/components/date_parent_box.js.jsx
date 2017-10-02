@@ -211,7 +211,7 @@ var DateParentBox = React.createClass({
       )
     }.bind(this));
     var style = {
-      width: itemNum*70 + "px"
+      width: itemNum*80 + "px"
     };
     var quTargetInput =
       <input className="form-control"
@@ -253,15 +253,14 @@ var DateParentBox = React.createClass({
           <div className="panel panel-default">
             <div className="panel-heading">日毎 <span className="date_msg"> {this.state.msg} </span></div>
             <div className="panel table-responsive">
-              <table className="table table-condensed table-hover table-striped">
+              <table className="table table-condensed table-hover table-striped sticky-table">
                 <thead>
                 {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
                 }
                   <tr>
                     {// 固定列
                     }
-                    <th rowSpan="2" className="btnCol"></th>
-                    <th rowSpan="2" className="dateCol">日付</th>
+                    <th rowSpan="2" className="btnCol">日付</th>
                     <th rowSpan="2" className="commentCol">目標</th>
                     <th rowSpan="2" className="commentCol">振返り</th>
                     {// 数値目標列ヘッダ・数値目標数だけrowSpan設定

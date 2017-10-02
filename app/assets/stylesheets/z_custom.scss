@@ -274,7 +274,7 @@ ul.navbar-nav {
 }
 
 .btnCol {
-  width: 18px;
+  width: 100px;
 }
 .dateCol {
   width: 74px;
@@ -318,4 +318,55 @@ label.control-label {
   text-align: right;
   vertical-align: middle;
   padding-right: 10px;
+}
+
+/* sticky-table */
+.sticky-table {
+//  display: block;
+  position: relative;
+  overflow: scroll;
+//  width: calc(100vw - 3.0rem);
+  height: calc(75vh);
+  border-collapse: collapse;
+//  font-size: 0px;
+}
+.sticky-table > thead,
+.sticky-table > tbody {
+//  display: block;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+.sticky-table > thead > tr > th,
+.sticky-table > thead > tr > td {
+//  display: inline-block;
+//  width: 8.0rem;
+  background: #fff;
+  font-size: 1.0rem;
+}
+.sticky-table > tbody > tr > th {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+.sticky-table > thead {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.sticky-table > thead > tr > th.btnCol {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+.sticky-table > thead > tr > th.dateCol {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 10px;
+  z-index: 3;
 }

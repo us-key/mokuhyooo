@@ -117,18 +117,16 @@ var DateChildBox = React.createClass({
     });
     return (
       <tr>
-        <td>
+        <th>
           <a>
-          <span id="register"
-                className="glyphicon glyphicon-save"
-                aria-hidden="true"
-                onClick={e => this.onSubmit(e, this.state.com_id, this.state.comment)}>
-          </span>
-        </a>
-        </td>
-        <td>
-        {target_date}
-        </td>
+            <span id="register"
+                  className="glyphicon glyphicon-save"
+                  aria-hidden="true"
+                  onClick={e => this.onSubmit(e, this.state.com_id, this.state.comment)}>
+            </span>
+          </a>
+          {target_date}
+        </th>
         {// 目標BOX
         }
         {itemsBox}
