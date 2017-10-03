@@ -116,7 +116,8 @@ var DateSummaryBox = React.createClass({
     });
     return (
       <tr>
-        <td colSpan="3" style={{"textAlign":"center"}}>
+        <th></th>
+        <td colSpan="2" style={{"textAlign":"center"}}>
           {summary_label}
         </td>
         {// 目標BOX
