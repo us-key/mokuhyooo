@@ -56,15 +56,10 @@ var DateChildBox = React.createClass({
     for (var i = 0, len = td.length; i < len; i++) {
       // 0,1：目標・振り返り
       // 2～：数値目標(ソート順:2～)
-      // if (i == 1) {
-      //   date = td.eq(i).text();
-      // }
-      // if (i >= 2) {
-        var id = td.eq(i).children('.item_value')[0].id;
-        // TODO kindによりvalueの取り方を変える必要あり
-        var val = td.eq(i).children('.item_value')[0].value;
-        record[i]= {"id": id, "value": val};
-      // }
+      var id = td.eq(i).children('.item_value')[0].id;
+      // TODO kindによりvalueの取り方を変える必要あり
+      var val = td.eq(i).children('.item_value')[0].value;
+      record[i]= {"id": id, "value": val};
     }
     // ajaxでレコード送信
     // requestの形式
