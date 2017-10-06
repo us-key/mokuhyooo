@@ -46,6 +46,11 @@ var DateChildBox = React.createClass({
   },
   onSubmit(e) {
     e.preventDefault();
+    var waitMsgHtml = '<img src="/assets/loading.gif" alt="●" id="loading-img"/><div id="loading-msg">'
+      + '処理中...' + '</div>';
+    $.blockUI({
+      message: waitMsgHtml
+    });
     // 行のjQueryオブジェクト取得
     var tr = $(e.target).parent().parent().parent();
     var th = tr.find('th');
@@ -80,12 +85,13 @@ var DateChildBox = React.createClass({
         'record': record
       },
       success: function(result) {
+        $.unblockUI();
         this.props.showMsg(result.message);
       }.bind(this),
       error: function(xhr, status, err) {
+        $.unblockUI();
         console.error(this.props.url, status, err.toString());
       }.bind(this)
-
     });
   },
   render () {

@@ -118,6 +118,7 @@ var FreeWordBox = React.createClass({
   },
   onClick(e, com_id, comment) {
     e.preventDefault();
+    $.blockUI();
     $.ajax({
       url: this.props.url,
       type: 'POST',
@@ -130,6 +131,7 @@ var FreeWordBox = React.createClass({
         'record_date': this.props.target_date
       },
       success: function(result) {
+        $.unblockUI();
         this.setState({
           message: result.message
         });
@@ -144,6 +146,7 @@ var FreeWordBox = React.createClass({
         }.bind(this), 2000);
       }.bind(this),
       error: function(xhr, status, err) {
+        $.unblockUI();
         console.error(this.props.url, status, err.toString());
         // 過去のメッセージが再表示されないように一旦すべて消す
         $('.register_msg').text("");
