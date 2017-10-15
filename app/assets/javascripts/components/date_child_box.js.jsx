@@ -46,10 +46,9 @@ var DateChildBox = React.createClass({
   },
   onSubmit(e) {
     e.preventDefault();
-    var waitMsgHtml = '<img src="/assets/loading.gif" alt="●" id="loading-img"/><div id="loading-msg">'
-      + '処理中...' + '</div>';
+//    var waitMsgHtml = getWaintMsgHtml();
     $.blockUI({
-      message: waitMsgHtml
+      message: getWaintMsgHtml()
     });
     // 行のjQueryオブジェクト取得
     var tr = $(e.target).parent().parent().parent();

@@ -118,7 +118,9 @@ var FreeWordBox = React.createClass({
   },
   onClick(e, com_id, comment) {
     e.preventDefault();
-    $.blockUI();
+    $.blockUI({
+      message: getWaintMsgHtml()
+    });
     $.ajax({
       url: this.props.url,
       type: 'POST',
