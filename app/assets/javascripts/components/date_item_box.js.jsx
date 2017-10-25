@@ -56,7 +56,7 @@ var DateItemBox = React.createClass({
     if (prevProps.id == this.props.id) {
       return;
     }
-    var itemNode = "textarea#" + this.props.id.toString();
+    var itemNode = "textarea#" + this.props.id;
     if (this.props.id != "" && typeof itemNode !== "undefined") {
       var item = $(itemNode)[0];
       if (typeof item !== "undefined") {
@@ -77,19 +77,24 @@ var DateItemBox = React.createClass({
     this.setState({item_value: e.target.value});
   },
   changeHeight(item) {
+    console.log("date_item_box:changeHeight")
     // 高さ
     if(item.scrollHeight > item.offsetHeight){
       this.setState({inputHeight: item.scrollHeight+1});
     }else{
-      var lineHeight = Number($(item).css("lineHeight").split("px")[0]);
-      while (true){
-        $(item).height($(item).height() - lineHeight);
-        if(item.scrollHeight > item.offsetHeight){
-          $(item).height(item.scrollHeight+1);
-          this.setState({inputHeight: $(item).height()});
-          break;
-        }
-      }
+      var dom = $(item);
+      dom.height(dom.height() - Number(dom.css("lineHeight").split("px")[0])+1);
+      dom.height(item.scrollHeight+1);
+      this.setState({inputHeight: dom.height()});
+      // var lineHeight = Number(dom.css("lineHeight").split("px")[0]);
+      // while (true){
+      //   dom.height(dom.height() - lineHeight);
+      //   if(item.scrollHeight > item.offsetHeight){
+      //     dom.height(item.scrollHeight+1);
+      //     this.setState({inputHeight: dom.height()});
+      //     break;
+      //   }
+      // }
     }
   },
   onChangeHour(e) {
