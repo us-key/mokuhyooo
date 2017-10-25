@@ -75,7 +75,7 @@ var FreeWordBox = React.createClass({
       com_id:"",
       comment:"",
       message:"",
-      inputHeight: 40
+      inputHeight: 20
     };
   },
   componentDidMount() {
@@ -87,7 +87,7 @@ var FreeWordBox = React.createClass({
         return;
       }
     }
-    this.setState({inputHeight: 40});
+    this.setState({inputHeight: 20});
   },
   componentWillMount() {
     this.getComment(this.props.target_date);
@@ -116,7 +116,7 @@ var FreeWordBox = React.createClass({
         return;
       }
     }
-    this.setState({inputHeight: 40});
+    this.setState({inputHeight: 20});
   },
   getComment(target_date) {
     $.ajax({
@@ -214,9 +214,9 @@ var FreeWordBox = React.createClass({
     const panelId = this.props.prefix + "_panel";
     var panelClass = "panel collapse";
     // 目標欄のみ開いて初期表示
-    if ("T" == this.props.type) {
+    // if ("T" == this.props.type) {
       panelClass += " in";
-    }
+    // }
     var headerPanelClass = "panel panel-";
     switch(this.props.unit) {
       case "Y" : headerPanelClass += "info"; break;

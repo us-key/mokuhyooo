@@ -18,7 +18,7 @@ var DateItemBox = React.createClass({
       item_value: this.props.item_value,
       base_hour: time[0],
       base_minute: time[1],
-      inputHeight: 40
+      inputHeight: 20
     };
   },
   componentDidMount() {
@@ -30,7 +30,7 @@ var DateItemBox = React.createClass({
         return;
       }
     }
-    this.setState({inputHeight: 40});
+    this.setState({inputHeight: 20});
   },
   componentWillReceiveProps(nextProps) {
     var time = this.getTime(nextProps);
@@ -64,7 +64,7 @@ var DateItemBox = React.createClass({
         return;
       }
     }
-    this.setState({inputHeight: 40})
+    this.setState({inputHeight: 20})
   },
   onChangeText(e) {
     e.preventDefault;
