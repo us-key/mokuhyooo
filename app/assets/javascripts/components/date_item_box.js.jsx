@@ -17,8 +17,20 @@ var DateItemBox = React.createClass({
     return {
       item_value: this.props.item_value,
       base_hour: time[0],
-      base_minute: time[1]
+      base_minute: time[1],
+      inputHeight: 40
     };
+  },
+  componentDidMount() {
+    var itemNode = "textarea#" + this.props.id;
+    if (this.props.id != "") {
+      var item = $(itemNode)[0];
+      if (typeof item !== "undefined") {
+        this.changeHeight(item);
+        return;
+      }
+    }
+    this.setState({inputHeight: 40});
   },
   componentWillReceiveProps(nextProps) {
     var time = this.getTime(nextProps);
@@ -40,9 +52,45 @@ var DateItemBox = React.createClass({
     // 一旦常に再描画
     return true;
   },
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.id == this.props.id) {
+      return;
+    }
+    var itemNode = "textarea#" + this.props.id.toString();
+    if (this.props.id != "" && typeof itemNode !== "undefined") {
+      var item = $(itemNode)[0];
+      if (typeof item !== "undefined") {
+        this.changeHeight(item);
+        return;
+      }
+    }
+    this.setState({inputHeight: 40})
+  },
   onChangeText(e) {
     e.preventDefault;
     this.setState({item_value: e.target.value});
+    if (typeof e.target !== "undefined") {
+      this.changeHeight(e.target);
+    }
+  },
+  onChangeVal(e) {
+    this.setState({item_value: e.target.value});
+  },
+  changeHeight(item) {
+    // 高さ
+    if(item.scrollHeight > item.offsetHeight){
+      this.setState({inputHeight: item.scrollHeight+1});
+    }else{
+      var lineHeight = Number($(item).css("lineHeight").split("px")[0]);
+      while (true){
+        $(item).height($(item).height() - lineHeight);
+        if(item.scrollHeight > item.offsetHeight){
+          $(item).height(item.scrollHeight+1);
+          this.setState({inputHeight: $(item).height()});
+          break;
+        }
+      }
+    }
   },
   onChangeHour(e) {
     e.preventDefault;
@@ -66,7 +114,9 @@ var DateItemBox = React.createClass({
          <textarea id={this.props.id}
                 value={this.state.item_value}
             className="form-control item_value"
-             onChange={this.onChangeText}>
+             onChange={this.onChangeText}
+                style={{height: this.state.inputHeight}}
+             >
          </textarea>
         </td>
       );
@@ -109,7 +159,7 @@ var DateItemBox = React.createClass({
            <input id={this.props.id}
                value={this.state.item_value}
            className="form-control item_value"
-            onChange={this.onChangeText}
+            onChange={this.onChangeVal}
                 type="number"
                  min="0">
            </input>

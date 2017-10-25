@@ -74,8 +74,20 @@ var FreeWordBox = React.createClass({
     return {
       com_id:"",
       comment:"",
-      message:""
+      message:"",
+      inputHeight: 40
     };
+  },
+  componentDidMount() {
+    var itemNode = "textarea#" + this.state.com_id;
+    if (this.state.com_id != "") {
+      var item = $(itemNode)[0];
+      if (typeof item !== "undefined") {
+        this.changeHeight(item);
+        return;
+      }
+    }
+    this.setState({inputHeight: 40});
   },
   componentWillMount() {
     this.getComment(this.props.target_date);
@@ -91,6 +103,20 @@ var FreeWordBox = React.createClass({
     } else {
       return false;
     }
+  },
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.com_id == this.state.com_id) {
+      return;
+    }
+    var itemNode = "textarea#" + this.state.com_id;
+    if (this.state.com_id != "" && typeof itemNode !== "undefined") {
+      var item = $(itemNode)[0];
+      if (typeof item !== "undefined") {
+        this.changeHeight(item);
+        return;
+      }
+    }
+    this.setState({inputHeight: 40});
   },
   getComment(target_date) {
     $.ajax({
@@ -115,6 +141,25 @@ var FreeWordBox = React.createClass({
   },
   onChangeText(e) {
     this.setState({comment: e.target.value});
+    if (typeof e.target !== "undefined") {
+      this.changeHeight(e.target);
+    }
+  },
+  changeHeight(item) {
+    // 高さ
+    if(item.scrollHeight > item.offsetHeight){
+      this.setState({inputHeight: item.scrollHeight+1});
+    }else{
+      var lineHeight = Number($(item).css("lineHeight").split("px")[0]);
+      while (true){
+        $(item).height($(item).height() - lineHeight);
+        if(item.scrollHeight > item.offsetHeight){
+          $(item).height(item.scrollHeight+1);
+          this.setState({inputHeight: $(item).height()});
+          break;
+        }
+      }
+    }
   },
   onClick(e, com_id, comment) {
     e.preventDefault();
@@ -207,9 +252,10 @@ var FreeWordBox = React.createClass({
         </div>
         <div id={panelId} className={panelClass}>
           <textarea id={this.state.com_id}
-                    className="form-control prevMonthReviewInput"
+                    className="form-control freewordInput"
                     value={this.state.comment}
                     onChange={this.onChangeText}
+                    style={{height: this.state.inputHeight}}
                     >
           </textarea>
         </div>
