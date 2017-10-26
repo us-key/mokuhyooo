@@ -57,7 +57,7 @@ class Api::V1::DateTargetsController < ApplicationController
           @qu_pfm_percent[key] = key[4] ? ((@qu_pfm_sum[key].to_f / key[4].to_f)*100).round(1) : 0 #目標値に対する実績のパーセント
         else
           date_cnt = Date.strptime(params[:target_date_to], '%Y/%m/%d') - Date.strptime(params[:target_date_from], '%Y/%m/%d') + 1
-          @qu_pfm_percent[key] = key[4] ? ((value.to_f / ((key[4]*date_cnt).to_f))*100).round(1) : 0
+          @qu_pfm_percent[key] = key[4] ? (((value / (key[4]*date_cnt)).to_f)*100).round(1) : 0
         end
       end
     end
