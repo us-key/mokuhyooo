@@ -125,7 +125,7 @@ class Api::V1::DateTargetsController < ApplicationController
               @performance = QuantitativePerformance.new
               @performance.quantitative_target_id = target.id
               @performance.performance_date = Date.parse(params[:date])
-              @performance.performance_value = (0 + val.to_i) # ブランクならゼロで登録
+              @performance.performance_value = (0 + val.to_f) # ブランクならゼロで登録
               @performance.save
             end
           end
