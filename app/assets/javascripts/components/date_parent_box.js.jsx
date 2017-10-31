@@ -17,6 +17,7 @@ var DateParentBox = React.createClass({
         target_type: "SUM",
         quantity_kind: "QU",
         default_zero_flg: false,
+        decimal_flg: false,
         sort_order: "",
         start_date: "",
         end_date: "",
@@ -218,9 +219,22 @@ var DateParentBox = React.createClass({
              type="number"
              style={{"width":"50px","display":"inline"}}
              value={this.state.qty_target_data.target_qty}
+             step={this.state.qty_target_data.decimal_flg ? "0.01" : "1"}
              onChange={(e) => {
                var newState = this.state;
-               newState.qty_target_data.target_qty = e.target.value;
+               var newVal = 0;
+               var splitVal = e.target.value.split(".");
+               if (this.state.qty_target_data.decimal_flg) {
+                 if (typeof splitVal[1] !== "undefined"
+                 && splitVal[1].length > 2) {
+                   newVal = parseFloat(e.target.value).toFixed(2);
+                 } else {
+                   newVal = e.target.value;
+                 }
+               } else {
+                 newVal = parseInt(e.target.value).toFixed(0);
+               }
+               newState.qty_target_data.target_qty = newVal;
                this.setState(newState);
              }}/>
     ;
@@ -390,6 +404,26 @@ var DateParentBox = React.createClass({
                                    this.setState(newState);
                                  }}/>
                           未入力をゼロとみなす
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
+                      <div className="checkbox">
+                        <label>
+                          <input type="checkbox"
+                                 checked={this.state.qty_target_data.decimal_flg}
+                                 onChange={() => {
+                                   var newState = this.state;
+                                   // フラグを反転させる
+                                   newState.qty_target_data.decimal_flg = !newState.qty_target_data.decimal_flg;
+                                   if (!newState.qty_target_data.decimal_flg) {
+                                     newState.qty_target_data.target_qty = parseInt(newState.qty_target_data.target_qty);
+                                   }
+                                   this.setState(newState);
+                                 }}/>
+                          小数点以下入力
                         </label>
                       </div>
                     </div>
