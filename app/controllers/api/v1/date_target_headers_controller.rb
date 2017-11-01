@@ -25,6 +25,7 @@ class Api::V1::DateTargetHeadersController < ApplicationController
     @qt.name = params[:name]
     @qt.target_type = params[:target_type]
     @qt.default_zero_flg = params[:default_zero_flg]
+    @qt.decimal_flg = params[:decimal_flg]
     @qt.start_date = Date.strptime(params[:start_date], '%Y/%m/%d')
     @qt.end_date = Date.strptime(params[:end_date], '%Y/%m/%d')
     @qt.target_value = params[:target_value]

@@ -127,10 +127,14 @@ var DateParentBox = React.createClass({
               target_type: result.target_type,
               quantity_kind: result.quantity_kind,
               default_zero_flg: (result.default_zero_flg==1),
+              decimal_flg: (result.decimal_flg==1),
               sort_order: key,
               start_date: result.start_date ? result.start_date.replace(/-/g, '/') : formatDate(new Date(), 'YYYY/MM/DD'),
               end_date: result.end_date ? result.end_date.replace(/-/g, '/') : getLastDate(this.props.source_date, "Y"),
-              target_qty: (result.quantity_kind == 'QU') ? result.target_value : "",
+              target_qty: (result.quantity_kind == 'QU') ?
+                ((result.decimal_flg==1) ? result.target_value : parseInt(result.target_value))
+                :
+                "",
               target_hour: (result.quantity_kind != 'QU') ? parseInt(result.target_value)/60|0 : "",
               target_min: (result.quantity_kind != 'QU') ? parseInt(result.target_value)%60 : "",
               created_at: result.created_at.substring(0,10).replace(/-/g, '/')
@@ -171,6 +175,7 @@ var DateParentBox = React.createClass({
         'quantity_kind': this.state.qty_target_data.quantity_kind,
         // チェックボックスのbooleanから0/1に置換
         'default_zero_flg': this.state.qty_target_data.default_zero_flg ? "1" : "0",
+        'decimal_flg': this.state.qty_target_data.decimal_flg ? "1" : "0",
         'start_date': this.state.qty_target_data.start_date,
         'end_date': this.state.qty_target_data.end_date,
         'sort_order': this.state.qty_target_data.sort_order,
