@@ -4,6 +4,7 @@
     json.name qt.name
     json.type qt.target_type
     json.kind qt.quantity_kind
-    json.flg qt.default_zero_flg
+    json.zero_flg qt.default_zero_flg
+    json.decimal_flg qt.decimal_flg
   end
 end

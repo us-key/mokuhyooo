@@ -92,22 +92,24 @@ var DateSummaryBox = React.createClass({
     // target_idは数値目標のID。
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
       var item_arr = item_values[key]; // {"target_id": xxx, "value": xxx, "percent": xxx}
-      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
+      // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "zero_flg": xx, "deimal_flg": xx}
+      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "zero_flg":"", "decimal_flg":""});
       // 数値目標のタイプをDateItemBoxに設定する
       if (header_arr["kind"] == "TI" || header_arr["kind"] == "TD") {
         return (
           // 時間・時刻：中央揃え
           <td style={{"textAlign":"center"}}>
-            {("00" + (item_arr["value"]/60|0)).substr(-2)}：{("00" + (item_arr["value"]%60)).substr(-2)}
+            {("00" + (item_arr["value"]/60|0)).substr(-2)}：{("00" + parseInt(item_arr["value"]%60)).substr(-2)}
             <br/>
             {item_arr["percent"]}%
           </td>
         );
       } else {
+        var val = (item_arr["decimal_flg"] === "0") ? parseInt(item_arr["value"]) : item_arr["value"];
         return (
           // 数量：右寄せ
           <td style={{"textAlign":"right"}}>
-            {item_arr["value"]}
+            {val}
             <br/>
             {item_arr["percent"]}%
           </td>

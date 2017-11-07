@@ -8,14 +8,16 @@
  *   item_value:  QuantitativePerformance.performance_value
  *   type:        QuantitativeTarget.target_type
  *   kind:        QuantitativeTarget.quantity_kind
- *   flg:         QuantitativeTarget.default_zero_flg
+ *   zero_flg:    QuantitativeTarget.default_zero_flg
+ *   decimal_flg: QuantitativeTarget.decimal_flg
  *
  */
 var DateItemBox = React.createClass({
   getInitialState() {
     var time = this.getTime(this.props);
+    var val = (this.props.decimal_flg === "0") ? parseInt(this.props.item_value) : this.props.item_value;
     return {
-      item_value: this.props.item_value,
+      item_value: val,
       base_hour: time[0],
       base_minute: time[1],
       inputHeight: 20
@@ -74,7 +76,13 @@ var DateItemBox = React.createClass({
     }
   },
   onChangeVal(e) {
-    this.setState({item_value: e.target.value});
+    var val = 0;
+    if (this.props.decimal_flg === "0") {
+      val = parseInt(e.target.value);
+    } else {
+      val = e.target.value;
+    }
+    this.setState({item_value: val});
   },
   changeHeight(item) {
     console.log("date_item_box:changeHeight")

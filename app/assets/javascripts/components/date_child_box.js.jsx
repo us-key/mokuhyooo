@@ -46,7 +46,6 @@ var DateChildBox = React.createClass({
   },
   onSubmit(e) {
     e.preventDefault();
-//    var waitMsgHtml = getWaintMsgHtml();
     $.blockUI({
       message: getWaintMsgHtml()
     });
@@ -102,7 +101,8 @@ var DateChildBox = React.createClass({
     // target_idは数値目標のID。個別の入力値のIDではない。目標・振返りには-1,0を設定
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
       var item_arr = item_values[key]; // {"target_id": xxx, "id": xxx, "value": xxx}
-      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "flg":""}); // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx}
+      // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "zero_flg": xx, "decimal_flg": xx}
+      var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "zero_flg":"", "decimal_flg":""});
       // TODO 数値目標のタイプとかをDateItemBoxに設定する
       return (
         <DateItemBox
@@ -111,7 +111,8 @@ var DateChildBox = React.createClass({
           item_value = {item_arr["value"]}
           type = {header_arr["type"]}
           kind = {header_arr["kind"]}
-          flg = {header_arr["flg"]}
+          zero_flg = {header_arr["zero_flg"]}
+          decimal_flg = {header_arr["decimal_flg"]}
         />
       );
     });

@@ -81,7 +81,7 @@ var DateParentBox = React.createClass({
     // ajaxで数値目標のリストを取得
     // 形式
     // {
-    //   "2": {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "flg": xx},
+    //   "2": {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "zero_flg": xx, "deimal_flg": xx},
     //   "3": {…} // keyは数値目標のソート順
     // }
     $.ajax({
@@ -151,6 +151,7 @@ var DateParentBox = React.createClass({
           target_type: "SUM",
           quantity_kind: "QU",
           default_zero_flg: "",
+          decimal_flg: "",
           sort_order: "",
           start_date: formatDate(new Date(), 'YYYY/MM/DD'),
           end_date: getLastDate(this.props.source_date, "Y"),
