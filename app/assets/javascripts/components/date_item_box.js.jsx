@@ -15,7 +15,7 @@
 var DateItemBox = React.createClass({
   getInitialState() {
     var time = this.getTime(this.props);
-    var val = (this.props.decimal_flg === "0") ? parseInt(this.props.item_value) : this.props.item_value;
+    var val = (this.props.decimal_flg === "0" && !isReallyNaN(this.props.item_value)) ? parseInt(this.props.item_value) : this.props.item_value;
     return {
       item_value: val,
       base_hour: time[0],
@@ -36,8 +36,9 @@ var DateItemBox = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     var time = this.getTime(nextProps);
+    var val = (nextProps.decimal_flg === "0" && !isReallyNaN(nextProps.item_value)) ? parseInt(nextProps.item_value) : nextProps.item_value;
     this.setState({
-      item_value: nextProps.item_value,
+      item_value: val,
       base_hour: time[0],
       base_minute: time[1]
     });
