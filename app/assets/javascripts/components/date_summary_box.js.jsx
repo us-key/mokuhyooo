@@ -105,7 +105,7 @@ var DateSummaryBox = React.createClass({
           </td>
         );
       } else {
-        var val = (item_arr["decimal_flg"] === "0") ? parseInt(item_arr["value"]) : item_arr["value"];
+        var val = (header_arr["decimal_flg"] === "0") ? parseInt(item_arr["value"]) : item_arr["value"];
         return (
           // 数量：右寄せ
           <td style={{"textAlign":"right"}}>
