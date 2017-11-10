@@ -131,10 +131,7 @@ var DateParentBox = React.createClass({
               sort_order: key,
               start_date: result.start_date ? result.start_date.replace(/-/g, '/') : formatDate(new Date(), 'YYYY/MM/DD'),
               end_date: result.end_date ? result.end_date.replace(/-/g, '/') : getLastDate(this.props.source_date, "Y"),
-              target_qty: (result.quantity_kind == 'QU') ?
-                ((result.decimal_flg==1) ? result.target_value : parseInt(result.target_value))
-                :
-                "",
+              target_qty: (result.quantity_kind == 'QU') ? result.target_value : "",
               target_hour: (result.quantity_kind != 'QU') ? parseInt(result.target_value)/60|0 : "",
               target_min: (result.quantity_kind != 'QU') ? parseInt(result.target_value)%60 : "",
               created_at: result.created_at.substring(0,10).replace(/-/g, '/')
@@ -225,21 +222,10 @@ var DateParentBox = React.createClass({
              type="number"
              style={{"width":"50px","display":"inline"}}
              value={this.state.qty_target_data.target_qty}
-             step={this.state.qty_target_data.decimal_flg ? "0.01" : "1"}
+             step="1"
              onChange={(e) => {
                var newState = this.state;
-               var newVal = 0;
-               var splitVal = e.target.value.split(".");
-               if (this.state.qty_target_data.decimal_flg) {
-                 if (typeof splitVal[1] !== "undefined"
-                 && splitVal[1].length > 2) {
-                   newVal = parseFloat(e.target.value).toFixed(2);
-                 } else {
-                   newVal = e.target.value;
-                 }
-               } else {
-                 newVal = parseInt(e.target.value).toFixed(0);
-               }
+               var newVal = e.target.value;
                newState.qty_target_data.target_qty = newVal;
                this.setState(newState);
              }}/>
@@ -424,9 +410,6 @@ var DateParentBox = React.createClass({
                                    var newState = this.state;
                                    // フラグを反転させる
                                    newState.qty_target_data.decimal_flg = !newState.qty_target_data.decimal_flg;
-                                   if (!newState.qty_target_data.decimal_flg) {
-                                     newState.qty_target_data.target_qty = parseInt(newState.qty_target_data.target_qty);
-                                   }
                                    this.setState(newState);
                                  }}/>
                           小数点以下入力
