@@ -504,39 +504,50 @@ var DateParentBox = React.createClass({
 {// 月毎表示モーダルダイアログ
 }
 <div className="modal fade" id="monthlyDisplayModal" tabIndex="-1">
-  <div className="panel table-responsive">
-    <table className="table table-condensed table-hover table-striped sticky-table">
-      <thead>
-      {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
-      }
-        <tr>
-          {// 固定列
-          }
-          <th rowSpan="2" className="btnCol">日付</th>
-          <th rowSpan="2" className="commentCol">目標</th>
-          <th rowSpan="2" className="commentCol">振返り</th>
-          {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
-          }
-          <th colSpan={itemNum} style={style}>数値目標
-          </th>
-        </tr>
-        <tr>
-        {header}
-        </tr>
-      </thead>
-      <tbody>
-        {// 1週間分の行数用意。月曜～日曜
-        }
-        {monthlyDateNode}
-        {// TODO 目標の進捗表示行。週・月・年
-        }
-        <DateSummaryBox
-          target_date = {getFirstDate(this.props.source_date, "M", false)}
-          items = {this.state.items}
-          unit = "M"
-        />
-      </tbody>
-    </table>
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header">
+        <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
+        <h4 className="modal-title">月別表示</h4>
+      </div>
+      <div className="modal-body">
+
+        <div className="panel table-responsive">
+          <table className="table table-condensed table-hover table-striped sticky-table">
+            <thead>
+            {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
+            }
+              <tr>
+                {// 固定列
+                }
+                <th rowSpan="2" className="btnCol">日付</th>
+                <th rowSpan="2" className="commentCol">目標</th>
+                <th rowSpan="2" className="commentCol">振返り</th>
+                {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
+                }
+                <th colSpan={itemNum} style={style}>数値目標
+                </th>
+              </tr>
+              <tr>
+              {header}
+              </tr>
+            </thead>
+            <tbody>
+              {// 1週間分の行数用意。月曜～日曜
+              }
+              {monthlyDateNode}
+              {// TODO 目標の進捗表示行。週・月・年
+              }
+              <DateSummaryBox
+                target_date = {getFirstDate(this.props.source_date, "M", false)}
+                items = {this.state.items}
+                unit = "M"
+              />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {// 月毎表示モーダルダイアログおわり
