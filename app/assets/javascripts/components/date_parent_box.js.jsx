@@ -306,6 +306,218 @@ var DateParentBox = React.createClass({
              }}/>
       </div>
     ;
+    // 月別表示ダイアログ
+    var monthlyListDialog =
+      <div className="modal fade" id="monthlyDisplayModal" tabIndex="-1">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
+              <h4 className="modal-title">月別表示 : {this.state.targetYearMonth[0]}年{this.state.targetYearMonth[1]}月</h4>
+              <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
+                ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
+              </a>
+              <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[4],this.state.targetYearMonth[5])}
+                 style={{"float":"right"}}>
+                {this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞
+              </a>
+            </div>
+            <div className="modal-body">
+
+              <div className="panel table-responsive">
+                <table className="table table-condensed table-hover table-striped sticky-table">
+                  <thead>
+                  {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
+                  }
+                    <tr>
+                      {// 固定列
+                      }
+                      <th rowSpan="2" className="btnCol">日付</th>
+                      <th rowSpan="2" className="commentCol">目標</th>
+                      <th rowSpan="2" className="commentCol">振返り</th>
+                      {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
+                      }
+                      <th colSpan={itemNum} style={style}>数値目標
+                      </th>
+                    </tr>
+                    <tr>
+                    {header}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {// 1週間分の行数用意。月曜～日曜
+                    }
+                    {monthlyDateNode}
+                    {// TODO 目標の進捗表示行。週・月・年
+                    }
+                    <DateSummaryBox
+                      target_date = {this.state.targetYearMonth[0] + "/" + this.state.targetYearMonth[1] + "/" + "01"}
+                      items = {this.state.items}
+                      unit = "M"
+                    />
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ;
+    // 数値目標登録ダイアログ
+    var qtyTargetRegisterDialog =
+      <div className="modal fade" id="dateTargetModal" tabIndex="-1">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
+              <h4 className="modal-title">数値目標登録</h4>
+            </div>
+            <div className="modal-body">
+              <form action="javascript:void(0)" onSubmit={this.handleSubmit} className="form-horizontal">
+                <div className="form-group">
+                  <label className="col-sm-2 control-label" htmlFor="name">名前：</label>
+                  <div className="col-sm-10">
+                    <input className="form-control" type="text" name="name" value={this.state.qty_target_data.name}
+                         onChange={(e) => {
+                           var newState = this.state;
+                           newState.qty_target_data.name = e.target.value;
+                           this.setState(newState);
+                         }}
+                         required/>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="col-sm-2 control-label" htmlFor="target_type">集計方法：</label>
+                  <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
+                    <label>合計</label>
+                    <input type="radio" name="target_type" value="SUM"
+                           checked={this.state.qty_target_data.target_type === "SUM"}
+                           onChange={() => {
+                             var newState = this.state;
+                             newState.qty_target_data.target_type = "SUM";
+                             this.setState(newState);
+                           }}/>
+                    <label>平均</label>
+                    <input type="radio" name="target_type" value="AVE"
+                           checked={this.state.qty_target_data.target_type === "AVE"}
+                           onChange={() => {
+                             var newState = this.state;
+                             newState.qty_target_data.target_type = "AVE";
+                             this.setState(newState);
+                         }}/>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="col-sm-2 control-label" htmlFor="quantity_kind">数値種類：</label>
+                  <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
+                    <label>数量</label>
+                    <input type="radio" name="quantity_kind" value="QU"
+                           checked={this.state.qty_target_data.quantity_kind === "QU"}
+                           disabled={this.state.qty_target_data.mode === "U"}
+                           onChange={() => {
+                             var newState = this.state;
+                             newState.qty_target_data.quantity_kind = "QU";
+                             this.setState(newState);
+                           }}/>
+                    <label>時間</label>
+                    <input type="radio" name="quantity_kind" value="TI"
+                           checked={this.state.qty_target_data.quantity_kind === "TI"}
+                           disabled={this.state.qty_target_data.mode === "U"}
+                           onChange={() => {
+                             var newState = this.state;
+                             newState.qty_target_data.quantity_kind = "TI";
+                             this.setState(newState);
+                           }}/>
+                    <label>時刻</label>
+                    <input type="radio" name="quantity_kind" value="TD"
+                           checked={this.state.qty_target_data.quantity_kind === "TD"}
+                           disabled={this.state.qty_target_data.mode === "U"}
+                           onChange={() => {
+                             var newState = this.state;
+                             newState.qty_target_data.quantity_kind = "TD";
+                             this.setState(newState);
+                           }}/>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
+                    <div className="checkbox">
+                      <label>
+                        <input type="checkbox"
+                               checked={this.state.qty_target_data.default_zero_flg}
+                               onChange={() => {
+                                 var newState = this.state;
+                                 // フラグを反転させる
+                                 newState.qty_target_data.default_zero_flg = !newState.qty_target_data.default_zero_flg;
+                                 this.setState(newState);
+                               }}/>
+                        未入力をゼロとみなす
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
+                    <div className="checkbox">
+                      <label>
+                        <input type="checkbox"
+                               checked={this.state.qty_target_data.decimal_flg}
+                               onChange={() => {
+                                 var newState = this.state;
+                                 // フラグを反転させる
+                                 newState.qty_target_data.decimal_flg = !newState.qty_target_data.decimal_flg;
+                                 this.setState(newState);
+                               }}/>
+                        小数点以下入力
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="col-sm-2 control-label">１日あたり：</label>
+                  <div className="col-sm-10">
+                    {(this.state.qty_target_data.quantity_kind === "QU") ?
+                      quTargetInput
+                      :
+                      tiTdTargetInput
+                    }
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="col-sm-2 control-label" htmlFor="name">期間：</label>
+                  <div className="col-sm-10">
+                    <input className="form-control datepicker"
+                           type="text"
+                           style={{"width":"70px","display":"inline"}}
+                           value={this.state.qty_target_data.start_date}
+                           onBlur={(e) => {
+                             console.log("onBlur:" + e.target.value);
+                             var newState = this.state;
+                             newState.qty_target_data.start_date = e.target.value;
+                             this.setState(newState);
+                           }}/>
+                    ～
+                    <input className="form-control datepicker"
+                           type="text"
+                           style={{"width":"70px","display":"inline"}}
+                           value={this.state.qty_target_data.end_date}
+                           readOnly
+                           onBlur={(e) => {
+                             console.log("onBlur:" + e.target.value);
+                             var newState = this.state;
+                             newState.qty_target_data.end_date = e.target.value;
+                             this.setState(newState);
+                           }}/>
+                  </div>
+                </div>
+                <div>作成日：{this.state.qty_target_data.created_at}</div>
+                <button type="submit" className="btn btn-default">登録</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    ;
     return (
       <div className="row">
         <div className="col-md-12">
@@ -365,220 +577,16 @@ var DateParentBox = React.createClass({
             </div>
           </div>
         </div>
-{// 数値目標入力モーダルダイアログ
-}
-<div className="modal fade" id="dateTargetModal" tabIndex="-1">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
-        <h4 className="modal-title">数値目標登録</h4>
-      </div>
-      <div className="modal-body">
-        <form action="javascript:void(0)" onSubmit={this.handleSubmit} className="form-horizontal">
-          <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="name">名前：</label>
-            <div className="col-sm-10">
-              <input className="form-control" type="text" name="name" value={this.state.qty_target_data.name}
-                   onChange={(e) => {
-                     var newState = this.state;
-                     newState.qty_target_data.name = e.target.value;
-                     this.setState(newState);
-                   }}
-                   required/>
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="target_type">集計方法：</label>
-            <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
-              <label>合計</label>
-              <input type="radio" name="target_type" value="SUM"
-                     checked={this.state.qty_target_data.target_type === "SUM"}
-                     onChange={() => {
-                       var newState = this.state;
-                       newState.qty_target_data.target_type = "SUM";
-                       this.setState(newState);
-                     }}/>
-              <label>平均</label>
-              <input type="radio" name="target_type" value="AVE"
-                     checked={this.state.qty_target_data.target_type === "AVE"}
-                     onChange={() => {
-                       var newState = this.state;
-                       newState.qty_target_data.target_type = "AVE";
-                       this.setState(newState);
-                   }}/>
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="quantity_kind">数値種類：</label>
-            <div className="col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
-              <label>数量</label>
-              <input type="radio" name="quantity_kind" value="QU"
-                     checked={this.state.qty_target_data.quantity_kind === "QU"}
-                     disabled={this.state.qty_target_data.mode === "U"}
-                     onChange={() => {
-                       var newState = this.state;
-                       newState.qty_target_data.quantity_kind = "QU";
-                       this.setState(newState);
-                     }}/>
-              <label>時間</label>
-              <input type="radio" name="quantity_kind" value="TI"
-                     checked={this.state.qty_target_data.quantity_kind === "TI"}
-                     disabled={this.state.qty_target_data.mode === "U"}
-                     onChange={() => {
-                       var newState = this.state;
-                       newState.qty_target_data.quantity_kind = "TI";
-                       this.setState(newState);
-                     }}/>
-              <label>時刻</label>
-              <input type="radio" name="quantity_kind" value="TD"
-                     checked={this.state.qty_target_data.quantity_kind === "TD"}
-                     disabled={this.state.qty_target_data.mode === "U"}
-                     onChange={() => {
-                       var newState = this.state;
-                       newState.qty_target_data.quantity_kind = "TD";
-                       this.setState(newState);
-                     }}/>
-            </div>
-          </div>
-          <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
-              <div className="checkbox">
-                <label>
-                  <input type="checkbox"
-                         checked={this.state.qty_target_data.default_zero_flg}
-                         onChange={() => {
-                           var newState = this.state;
-                           // フラグを反転させる
-                           newState.qty_target_data.default_zero_flg = !newState.qty_target_data.default_zero_flg;
-                           this.setState(newState);
-                         }}/>
-                  未入力をゼロとみなす
-                </label>
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
-              <div className="checkbox">
-                <label>
-                  <input type="checkbox"
-                         checked={this.state.qty_target_data.decimal_flg}
-                         onChange={() => {
-                           var newState = this.state;
-                           // フラグを反転させる
-                           newState.qty_target_data.decimal_flg = !newState.qty_target_data.decimal_flg;
-                           this.setState(newState);
-                         }}/>
-                  小数点以下入力
-                </label>
-              </div>
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-sm-2 control-label">１日あたり：</label>
-            <div className="col-sm-10">
-              {(this.state.qty_target_data.quantity_kind === "QU") ?
-                quTargetInput
-                :
-                tiTdTargetInput
-              }
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-sm-2 control-label" htmlFor="name">期間：</label>
-            <div className="col-sm-10">
-              <input className="form-control datepicker"
-                     type="text"
-                     style={{"width":"70px","display":"inline"}}
-                     value={this.state.qty_target_data.start_date}
-                     onBlur={(e) => {
-                       console.log("onBlur:" + e.target.value);
-                       var newState = this.state;
-                       newState.qty_target_data.start_date = e.target.value;
-                       this.setState(newState);
-                     }}/>
-              ～
-              <input className="form-control datepicker"
-                     type="text"
-                     style={{"width":"70px","display":"inline"}}
-                     value={this.state.qty_target_data.end_date}
-                     readOnly
-                     onBlur={(e) => {
-                       console.log("onBlur:" + e.target.value);
-                       var newState = this.state;
-                       newState.qty_target_data.end_date = e.target.value;
-                       this.setState(newState);
-                     }}/>
-            </div>
-          </div>
-          <div>作成日：{this.state.qty_target_data.created_at}</div>
-          <button type="submit" className="btn btn-default">登録</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-{// モーダルダイアログおわり
-}
-{// 月毎表示モーダルダイアログ
-}
-<div className="modal fade" id="monthlyDisplayModal" tabIndex="-1">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
-        <h4 className="modal-title">月別表示 : {this.state.targetYearMonth[0]}年{this.state.targetYearMonth[1]}月</h4>
-        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
-          ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
-        </a>
-        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[4],this.state.targetYearMonth[5])}
-           style={{"float":"right"}}>
-          {this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞
-        </a>
-      </div>
-      <div className="modal-body">
-
-        <div className="panel table-responsive">
-          <table className="table table-condensed table-hover table-striped sticky-table">
-            <thead>
-            {// 固定列の日付・目標・振り返りプラス、登録した分の数値目標
-            }
-              <tr>
-                {// 固定列
-                }
-                <th rowSpan="2" className="btnCol">日付</th>
-                <th rowSpan="2" className="commentCol">目標</th>
-                <th rowSpan="2" className="commentCol">振返り</th>
-                {// 数値目標列ヘッダ・数値目標数だけrowSpan設定
-                }
-                <th colSpan={itemNum} style={style}>数値目標
-                </th>
-              </tr>
-              <tr>
-              {header}
-              </tr>
-            </thead>
-            <tbody>
-              {// 1週間分の行数用意。月曜～日曜
-              }
-              {monthlyDateNode}
-              {// TODO 目標の進捗表示行。週・月・年
-              }
-              <DateSummaryBox
-                target_date = {this.state.targetYearMonth[0] + "/" + this.state.targetYearMonth[1] + "/" + "01"}
-                items = {this.state.items}
-                unit = "M"
-              />
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{// 月毎表示モーダルダイアログおわり
-}
+        {// 数値目標入力モーダルダイアログ
+        }
+        {qtyTargetRegisterDialog}
+        {// モーダルダイアログおわり
+        }
+        {// 月毎表示モーダルダイアログ
+        }
+        {monthlyListDialog}
+        {// 月毎表示モーダルダイアログおわり
+        }
       </div>
     );
   }
