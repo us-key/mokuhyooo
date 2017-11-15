@@ -532,7 +532,7 @@ var DateParentBox = React.createClass({
         <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
           ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
         </a>
-        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}
+        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[4],this.state.targetYearMonth[5])}
            style={{"float":"right"}}>
           {this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞
         </a>
