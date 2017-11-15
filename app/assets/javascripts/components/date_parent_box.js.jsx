@@ -529,10 +529,13 @@ var DateParentBox = React.createClass({
       <div className="modal-header">
         <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
         <h4 className="modal-title">月別表示 : {this.state.targetYearMonth[0]}年{this.state.targetYearMonth[1]}月</h4>
-        <a href="" onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
+        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
           ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
         </a>
-        <a style={{"float":"right"}}>{this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞</a>
+        <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}
+           style={{"float":"right"}}>
+          {this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞
+        </a>
       </div>
       <div className="modal-body">
 
