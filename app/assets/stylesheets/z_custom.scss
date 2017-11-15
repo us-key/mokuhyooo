@@ -377,6 +377,17 @@ label.control-label {
   z-index: 3;
 }
 
+@media (min-width: 768px) {
+  .modal-dialog {
+    width: auto;
+    margin: 10px;
+  }
+}
+
+
+
+
+
 
 .windows8 {
 	position: relative;
