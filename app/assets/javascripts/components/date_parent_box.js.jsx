@@ -8,10 +8,11 @@
 var DateParentBox = React.createClass({
   getInitialState() {
     return {
-      dateArr: [],
-      monthlyDateArr: [],
+      dateArr: [], // 週表示の日付格納用配列
+      monthlyDateArr: [], // 月表示の日付格納用配列
       items: {},
       msg: "",
+      targetYearMonth: [],　// 月表示の対象月
       qty_target_data: {
         mode: "",
         name: "",
@@ -29,8 +30,11 @@ var DateParentBox = React.createClass({
       }
     };
   },
-  changeStartDate(e) {
-    this.setState()
+  onChangeMonth(e, year, month) {
+    e.preventDefault;
+    console.log("onChangeMonth:" + year + "/" + month);
+    var newYearMonth = year + "/" + month + "/" + "01";
+    this.getMonthlyDate(newYearMonth);
   },
   componentWillMount() {
     this.getDate(this.getTargetDate(this.props.source_date));
@@ -81,6 +85,19 @@ var DateParentBox = React.createClass({
   getMonthlyDate(firstDay) {
     var dt = new Date(firstDay);
     var month = dt.getMonth() + 1;
+    var targetYearMonth = [];
+    var prevMDt = addDate(dt, -1, 'MM');
+    var nextMDt = addDate(dt, 1, 'MM');
+    // 今月
+    targetYearMonth.push(dt.getFullYear());
+    targetYearMonth.push(month);
+    // 前月
+    targetYearMonth.push(prevMDt.getFullYear());
+    targetYearMonth.push(prevMDt.getMonth() + 1);
+    // 翌月
+    targetYearMonth.push(nextMDt.getFullYear());
+    targetYearMonth.push(nextMDt.getMonth() + 1);
+
     var monthlyDateArr = [];
     while (month === dt.getMonth() + 1) {
       var dtKey = dt.getFullYear() + "/" + ("0" + (dt.getMonth() + 1)).slice(-2)
@@ -89,7 +106,10 @@ var DateParentBox = React.createClass({
       monthlyDateArr.push(dtKey);
       dt.setDate(dt.getDate() + 1);
     }
-    this.setState({monthlyDateArr: monthlyDateArr});
+    this.setState({
+      monthlyDateArr: monthlyDateArr,
+      targetYearMonth: targetYearMonth
+    });
   },
   // ユーザーごとの数値目標項目を取得する
   getTargetItem() {
@@ -508,7 +528,11 @@ var DateParentBox = React.createClass({
     <div className="modal-content">
       <div className="modal-header">
         <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
-        <h4 className="modal-title">月別表示</h4>
+        <h4 className="modal-title">月別表示 : {this.state.targetYearMonth[0]}年{this.state.targetYearMonth[1]}月</h4>
+        <a href="" onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
+          ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
+        </a>
+        <a style={{"float":"right"}}>{this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞</a>
       </div>
       <div className="modal-body">
 
@@ -539,7 +563,7 @@ var DateParentBox = React.createClass({
               {// TODO 目標の進捗表示行。週・月・年
               }
               <DateSummaryBox
-                target_date = {getFirstDate(this.props.source_date, "M", false)}
+                target_date = {this.state.targetYearMonth[0] + "/" + this.state.targetYearMonth[1] + "/" + "01"}
                 items = {this.state.items}
                 unit = "M"
               />

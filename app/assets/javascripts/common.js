@@ -27,26 +27,27 @@ $(function(){
  * @return {Date}              加算後日付
  */
 var addDate = function (date, num, interval) {
+  var retDate = new Date(date.toString()); // dateが変更されないよう一度toStringする
   switch (interval) {
     case 'YYYY':
-      date.setYear(1900 + date.getYear() + num);
+      retDate.setYear(1900 + date.getYear() + num);
       break;
     case 'MM':
-      date.setMonth(date.getMonth() + num);
+      retDate.setMonth(date.getMonth() + num);
       break;
     case 'hh':
-      date.setHours(date.getHours() + num);
+      retDate.setHours(date.getHours() + num);
       break;
     case 'mm':
-      date.setMinutes(date.getMinutes() + num);
+      retDate.setMinutes(date.getMinutes() + num);
       break;
     case 'ss':
-      date.setSeconds(date.getSeconds() + num);
+      retDate.setSeconds(date.getSeconds() + num);
       break;
     default:
-      date.setDate(date.getDate() + num);
+      retDate.setDate(date.getDate() + num);
   }
-  return date;
+  return retDate;
 };
 
 /**
