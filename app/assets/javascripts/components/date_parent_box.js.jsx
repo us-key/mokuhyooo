@@ -9,10 +9,11 @@ var DateParentBox = React.createClass({
   getInitialState() {
     return {
       dateArr: [], // 週表示の日付格納用配列
-      monthlyDateArr: [], // 月表示の日付格納用配列
       items: {},
       msg: "",
-      targetYearMonth: [],　// 月表示の対象月
+      year: "", // 月別表示の対象年
+      yearlyMonthArr: {},
+      yearlyMonthDateArr: {}, // 月毎の日付配列を年月をキーに格納する連想配列
       qty_target_data: {
         mode: "",
         name: "",
@@ -30,15 +31,9 @@ var DateParentBox = React.createClass({
       }
     };
   },
-  onChangeMonth(e, year, month) {
-    e.preventDefault;
-    console.log("onChangeMonth:" + year + "/" + month);
-    var newYearMonth = year + "/" + month + "/" + "01";
-    this.getMonthlyDate(newYearMonth);
-  },
   componentWillMount() {
     this.getDate(this.getTargetDate(this.props.source_date));
-    this.getMonthlyDate(getFirstDate(this.props.source_date, "M", false))
+    this.getYearlyMonthDate(getFirstDate(this.props.source_date, "Y", false))
     this.getTargetItem();
   },
   componentWillReceiveProps(nextProps) {
@@ -81,35 +76,40 @@ var DateParentBox = React.createClass({
     }
     this.setState({dateArr : dateArr});
   },
-  // 1か月分の日付を配列に詰める
-  getMonthlyDate(firstDay) {
-    var dt = new Date(firstDay);
-    var month = dt.getMonth() + 1;
-    var targetYearMonth = [];
-    var prevMDt = addDate(dt, -1, 'MM');
-    var nextMDt = addDate(dt, 1, 'MM');
-    // 今月
-    targetYearMonth.push(dt.getFullYear());
-    targetYearMonth.push(month);
-    // 前月
-    targetYearMonth.push(prevMDt.getFullYear());
-    targetYearMonth.push(prevMDt.getMonth() + 1);
-    // 翌月
-    targetYearMonth.push(nextMDt.getFullYear());
-    targetYearMonth.push(nextMDt.getMonth() + 1);
-
-    var monthlyDateArr = [];
-    while (month === dt.getMonth() + 1) {
-      var dtKey = dt.getFullYear() + "/" + ("0" + (dt.getMonth() + 1)).slice(-2)
-                  + "/" + ("0" + dt.getDate()).slice(-2);
-      // 後でレコードとセットの配列に詰めるために配列にセットしておく
-      monthlyDateArr.push(dtKey);
-      dt.setDate(dt.getDate() + 1);
+  // 1年12か月分の月を配列にセットする
+  getYearlyMonthDate(firstDay) {
+    var year = firstDay.split("/",1)[0];
+    var yearlyMonthArr = {};
+    for (i = 1; i <= 12; i++) {
+      yearlyMonthArr[i] = year + "/" + ("0" + i.toString()).slice(-2);
     }
     this.setState({
-      monthlyDateArr: monthlyDateArr,
-      targetYearMonth: targetYearMonth
+      year: year,
+      yearlyMonthArr: yearlyMonthArr
     });
+  },
+  // 対象月1か月分の日付を算出し配列に詰める
+  // targetYearMonth:YYYY/MM
+  getMonthlyDateArr(e, targetYearMonth) {
+    e.preventDefault;
+    var newVal = this.state.yearlyMonthDateArr;
+
+    var monthlyDateArr = [];
+    if ([] == newVal[targetYearMonth]
+    || typeof newVal[targetYearMonth] === "undefined") {
+      var dt = new Date(targetYearMonth + "/01");
+      var month = dt.getMonth() + 1;
+      while (month === dt.getMonth() + 1) {
+        var dtVal = targetYearMonth + "/" + ("0" + dt.getDate()).slice(-2);
+        monthlyDateArr.push(dtVal);
+        dt.setDate(dt.getDate() + 1);
+      }
+
+      newVal[targetYearMonth] = monthlyDateArr;
+      this.setState({
+        yearlyMonthDateArr: newVal
+      });
+    }
   },
   // ユーザーごとの数値目標項目を取得する
   getTargetItem() {
@@ -245,16 +245,7 @@ var DateParentBox = React.createClass({
         />
       )
     }.bind(this));
-    var monthlyDateNode = this.state.monthlyDateArr.map(function(data) {
-      return (
-        <DateChildBox
-          url={url}
-          target_date={data}
-          items={items}
-          showMsg={this.showMsg}
-        />
-      )
-    }.bind(this));
+
     var itemNum = Object.keys(this.state.items).length;
     itemsArr = this.state.items;
     var header = Object.keys(this.state.items).map(function(key, idx) {
@@ -306,6 +297,35 @@ var DateParentBox = React.createClass({
              }}/>
       </div>
     ;
+    // 月単位のレコード＋サマリ行
+    var monthlyListItems = Object.keys(this.state.yearlyMonthArr).map(function(key, idx) {
+      var yearMonth = this.state.yearlyMonthArr[key];
+      // 月別の日毎の
+      var monthlyDateNode =
+        this.state.yearlyMonthDateArr[yearMonth] ?
+        this.state.yearlyMonthDateArr[yearMonth].map(function(data) {
+          return (
+            <DateChildBox
+              url={url}
+              target_date={data}
+              items={items}
+              showMsg={this.showMsg}
+            />
+          );
+        })
+        :
+        <tr></tr>
+      return (
+        <tbody onClick={(e) => this.getMonthlyDateArr(e, yearMonth)}>
+        {monthlyDateNode}
+        <DateSummaryBox
+          target_date = {yearMonth + "/" + "01"}
+          items = {this.state.items}
+          unit = "M"
+        />
+        </tbody>
+      );
+    }.bind(this));
     // 月別表示ダイアログ
     var monthlyListDialog =
       <div className="modal fade" id="monthlyDisplayModal" tabIndex="-1">
@@ -313,14 +333,7 @@ var DateParentBox = React.createClass({
           <div className="modal-content">
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal"><span>×</span></button>
-              <h4 className="modal-title">月別表示 : {this.state.targetYearMonth[0]}年{this.state.targetYearMonth[1]}月</h4>
-              <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[2],this.state.targetYearMonth[3])}>
-                ＜{this.state.targetYearMonth[2]}年{this.state.targetYearMonth[3]}月
-              </a>
-              <a onClick={e => this.onChangeMonth(e, this.state.targetYearMonth[4],this.state.targetYearMonth[5])}
-                 style={{"float":"right"}}>
-                {this.state.targetYearMonth[4]}年{this.state.targetYearMonth[5]}月＞
-              </a>
+              <h4 className="modal-title">月別表示 : {this.state.year}年</h4>
             </div>
             <div className="modal-body">
 
@@ -344,18 +357,14 @@ var DateParentBox = React.createClass({
                     {header}
                     </tr>
                   </thead>
-                  <tbody>
-                    {// 1週間分の行数用意。月曜～日曜
-                    }
-                    {monthlyDateNode}
-                    {// TODO 目標の進捗表示行。週・月・年
-                    }
-                    <DateSummaryBox
-                      target_date = {this.state.targetYearMonth[0] + "/" + this.state.targetYearMonth[1] + "/" + "01"}
-                      items = {this.state.items}
-                      unit = "M"
-                    />
-                  </tbody>
+                  {// 1週間分の行数用意。月曜～日曜
+                  }
+                  {
+                    //monthlyDateNode
+                  }
+                  {// TODO 目標の進捗表示行。週・月・年
+                  }
+                  {monthlyListItems}
                 </table>
               </div>
             </div>

@@ -86,8 +86,8 @@ var DateSummaryBox = React.createClass({
     var summary_label = "合計・平均/進捗(";
     switch(this.props.unit) {
       case 'W' : summary_label += "週)"; break;
-      case 'M' : summary_label += "月)"; break;
-      case 'Y' : summary_label += "年)"; break;
+      case 'M' : summary_label += (this.props.target_date.split("/",2)[1] + "月)"); break;
+      case 'Y' : summary_label += (this.props.target_date.split("/",2)[0] + "年)"); break;
     }
     // target_idは数値目標のID。
     var itemsBox = Object.keys(this.state.item_values).map(function(key, idx) {
