@@ -14,6 +14,7 @@ var DateParentBox = React.createClass({
       year: "", // 月別表示の対象年
       yearlyMonthArr: {},
       yearlyMonthDateArr: {}, // 月毎の日付配列を年月をキーに格納する連想配列
+      yearlyMonthDispArr: {}, // 月毎の日別明細表示有無を年月をキーに格納する連想配列
       qty_target_data: {
         mode: "",
         name: "",
@@ -93,6 +94,13 @@ var DateParentBox = React.createClass({
   getMonthlyDateArr(e, targetYearMonth) {
     e.preventDefault;
     var newVal = this.state.yearlyMonthDateArr;
+    var newDispVal = this.state.yearlyMonthDispArr;
+
+    if (typeof newDispVal[targetYearMonth] === "undefined") {
+      newDispVal[targetYearMonth] = true;
+    } else {
+      newDispVal[targetYearMonth] = !newDispVal[targetYearMonth];
+    }
 
     var monthlyDateArr = [];
     if ([] == newVal[targetYearMonth]
@@ -104,11 +112,16 @@ var DateParentBox = React.createClass({
         monthlyDateArr.push(dtVal);
         dt.setDate(dt.getDate() + 1);
       }
-
       newVal[targetYearMonth] = monthlyDateArr;
+
       this.setState({
-        yearlyMonthDateArr: newVal
+        yearlyMonthDateArr: newVal,
+        yearlyMonthDispArr: newDispVal
       });
+    } else {
+      this.setState({
+        yearlyMonthDispArr: newDispVal
+      })
     }
   },
   // ユーザーごとの数値目標項目を取得する
@@ -302,7 +315,7 @@ var DateParentBox = React.createClass({
       var yearMonth = this.state.yearlyMonthArr[key];
       // 月別の日毎の
       var monthlyDateNode =
-        this.state.yearlyMonthDateArr[yearMonth] ?
+        (this.state.yearlyMonthDateArr[yearMonth] && this.state.yearlyMonthDispArr[yearMonth]) ?
         this.state.yearlyMonthDateArr[yearMonth].map(function(data) {
           return (
             <DateChildBox
@@ -357,12 +370,7 @@ var DateParentBox = React.createClass({
                     {header}
                     </tr>
                   </thead>
-                  {// 1週間分の行数用意。月曜～日曜
-                  }
-                  {
-                    //monthlyDateNode
-                  }
-                  {// TODO 目標の進捗表示行。週・月・年
+                  {// 目標の進捗表示行。週・月・年
                   }
                   {monthlyListItems}
                 </table>
