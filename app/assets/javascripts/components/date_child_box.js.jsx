@@ -23,7 +23,8 @@ var DateChildBox = React.createClass({
   },
   shouldComponentUpdate(nextProps, nextState) {
     // ajax結果でsetStateされたら再描画
-    if (this.state.item_values != nextState.item_values) {
+    if (this.state.item_values != nextState.item_values ||
+      this.props.disp != nextProps.disp) {
       return true;
     } else {
       return false;
@@ -117,7 +118,7 @@ var DateChildBox = React.createClass({
       );
     });
     return (
-      <tr>
+      <tr style={{"display":(this.props.disp ? "" : "none")}}>
         <th>
           <a>
             <span id="register"

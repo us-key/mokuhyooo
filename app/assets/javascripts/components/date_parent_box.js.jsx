@@ -255,6 +255,7 @@ var DateParentBox = React.createClass({
           target_date={data}
           items={items}
           showMsg={this.showMsg}
+          disp={true}
         />
       )
     }.bind(this));
@@ -313,9 +314,10 @@ var DateParentBox = React.createClass({
     // 月単位のレコード＋サマリ行
     var monthlyListItems = Object.keys(this.state.yearlyMonthArr).map(function(key, idx) {
       var yearMonth = this.state.yearlyMonthArr[key];
+      var disp = this.state.yearlyMonthDispArr[yearMonth];
       // 月別の日毎の
       var monthlyDateNode =
-        (this.state.yearlyMonthDateArr[yearMonth] && this.state.yearlyMonthDispArr[yearMonth]) ?
+        this.state.yearlyMonthDateArr[yearMonth] ?
         this.state.yearlyMonthDateArr[yearMonth].map(function(data) {
           return (
             <DateChildBox
@@ -323,11 +325,12 @@ var DateParentBox = React.createClass({
               target_date={data}
               items={items}
               showMsg={this.showMsg}
+              disp={disp}
             />
           );
         })
         :
-        <tr></tr>
+        <span></span>
       return (
         <tbody onClick={(e) => this.getMonthlyDateArr(e, yearMonth)}>
         {monthlyDateNode}
