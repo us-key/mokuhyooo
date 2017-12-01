@@ -111,7 +111,7 @@ class Api::V1::DateTargetsController < ApplicationController
                 quantitative_target_id: target.id,
                 performance_date: Date.parse(params[:date])
             ))
-            if val == "" && target.default_zero_flg == "0"
+            if (val.blank? || val == "NaN") && target.default_zero_flg == "0"
               # ゼロを計算対象としない場合、ブランクで更新された場合は作成済のレコードを消す
               @performance.destroy
             else
@@ -119,7 +119,7 @@ class Api::V1::DateTargetsController < ApplicationController
               @performance.save
             end
           else
-            if val == "" && target.default_zero_flg == "0"
+            if (val.blank? || val == "NaN") && target.default_zero_flg == "0"
               # TODO メッセージ出す？default_zero_flg=1の場合はゼロで登録
             else
               @performance = QuantitativePerformance.new

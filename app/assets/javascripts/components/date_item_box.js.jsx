@@ -15,7 +15,11 @@
 var DateItemBox = React.createClass({
   getInitialState() {
     var time = this.getTime(this.props);
-    var val = (this.props.decimal_flg === "0" && !isReallyNaN(this.props.item_value)) ? parseInt(this.props.item_value) : this.props.item_value;
+    var val = (this.props.decimal_flg === "0"
+        && !isReallyNaN(this.props.item_value)
+        && !(this.props.item_value != ""))
+      ? parseInt(this.props.item_value)
+      : this.props.item_value;
     return {
       item_value: val,
       base_hour: time[0],
@@ -108,17 +112,69 @@ var DateItemBox = React.createClass({
   },
   onChangeHour(e) {
     e.preventDefault;
-    this.setState({
-      base_hour: parseInt(e.target.value),
-      item_value: parseInt(this.state.base_minute) + e.target.value * 60
-    });
+    this.calcMin(e.target.value, this.state.base_minute);
+    // if (e.target.value) {
+    //   this.setState({
+    //     base_hour: parseInt(e.target.value),
+    //     item_value: parseInt(this.state.base_minute) + e.target.value * 60
+    //   });
+    // } else {
+    //   this.setState({
+    //     base_hour: "",
+    //     item_value: ""
+    //   })
+    // }
   },
   onChangeMinute(e) {
     e.preventDefault;
+    this.calcMin(this.state.base_hour, e.target.value);
+    // if (e.target.value) {
+    //   if (this.state.base_hour) {
+    //     this.setState({
+    //       base_minute: parseInt(e.target.value),
+    //       item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)
+    //     });
+    //   } else {
+    //     this.setState({
+    //       base_minute: parseInt(e.target.value),
+    //       item_value: parseInt(e.target.value)
+    //     });
+    //   } else {
+    //   }
     this.setState({
       base_minute: parseInt(e.target.value),
       item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)
     });
+  },
+  calcMin(hour, minute) {
+    if (!hour && !minute) {
+      this.setState({
+        base_hour: "",
+        base_minute: "",
+        item_value: ""
+      });
+      return;
+    }
+    var base_hour;
+    var base_minute;
+    var item_value = 0;
+    if (hour) {
+      base_hour = parseInt(hour);
+      item_value += parseInt(base_hour) * 60;
+    } else {
+      base_hour = "";
+    }
+    if (minute) {
+      base_minute = parseInt(minute);
+      item_value += parseInt(base_minute);
+    } else {
+      base_minute = "";
+    }
+    this.setState({
+      base_hour: base_hour,
+      base_minute: base_minute,
+      item_value: item_value
+    })
   },
   render() {
     // 目標・振り返りはtextarea,他はinputtext

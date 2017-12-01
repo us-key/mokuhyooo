@@ -61,20 +61,11 @@ var DateChildBox = React.createClass({
       // 0,1：目標・振り返り
       // 2～：数値目標(ソート順:2～)
       var id = td.eq(i).children('.item_value')[0].id;
-      // TODO kindによりvalueの取り方を変える必要あり
       var val = td.eq(i).children('.item_value')[0].value;
+      console.log("onSubmit(): id:" + id + ", val:" + val);
       record[i]= {"id": id, "value": val};
     }
-    // ajaxでレコード送信
-    // requestの形式
-    // {
-    //   date: '2017/08/01'
-    //   record: {
-    //     xx: {id: xx, value: xx} // key:sort_order⇒itemをサーバー側で識別するために使用。
-    //     yy: {id: yy, value: yy}
-    //     ...
-    //   }
-    // }
+
     $.ajax({
       url: '/api/v1/date_targets.json',
       type: 'POST',
@@ -104,7 +95,7 @@ var DateChildBox = React.createClass({
       var item_arr = item_values[key]; // {"target_id": xxx, "id": xxx, "value": xxx}
       // {"qt_id": xx, "name": xx, "type": xx, "kind": xx, "zero_flg": xx, "decimal_flg": xx}
       var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "zero_flg":"", "decimal_flg":""});
-      // TODO 数値目標のタイプとかをDateItemBoxに設定する
+      console.log("date_child_box.render: item_value:" + item_arr["value"]);
       return (
         <DateItemBox
           id = {item_arr["id"]}

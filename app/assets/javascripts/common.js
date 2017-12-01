@@ -135,6 +135,8 @@ var formatDate = function (date, format) {
 }
 
 var isReallyNaN = function (x) {
+  console.log(x);
+  console.log((x !== x));
   return (x !== x);
 }
 
