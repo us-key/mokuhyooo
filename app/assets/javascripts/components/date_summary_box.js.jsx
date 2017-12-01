@@ -79,6 +79,10 @@ var DateSummaryBox = React.createClass({
       }.bind(this)
     });
   },
+  sendTargetDate(e) {
+    this.props.onEventCallBack(this.props.target_date.substr(0,7));
+    return;
+  },
   render () {
     var items = this.props.items;
     var item_values = this.state.item_values;
@@ -117,7 +121,7 @@ var DateSummaryBox = React.createClass({
       }
     });
     return (
-      <tr>
+      <tr onClick={(e) => this.sendTargetDate(e)}>
         <th></th>
         <td colSpan="2" style={{"textAlign":"center"}}>
           {summary_label}

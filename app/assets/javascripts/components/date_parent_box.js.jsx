@@ -91,8 +91,9 @@ var DateParentBox = React.createClass({
   },
   // 対象月1か月分の日付を算出し配列に詰める
   // targetYearMonth:YYYY/MM
-  getMonthlyDateArr(e, targetYearMonth) {
-    e.preventDefault;
+  getMonthlyDateArr(targetYearMonth) {
+    //e.preventDefault;
+    console.log("getMonthlyDateArr:" + targetYearMonth);
     var newVal = this.state.yearlyMonthDateArr;
     var newDispVal = this.state.yearlyMonthDispArr;
 
@@ -332,12 +333,13 @@ var DateParentBox = React.createClass({
         :
         <span></span>
       return (
-        <tbody onClick={(e) => this.getMonthlyDateArr(e, yearMonth)}>
-        {monthlyDateNode}
-        <DateSummaryBox
-          target_date = {yearMonth + "/" + "01"}
-          items = {this.state.items}
-          unit = "M"
+        <tbody>
+          {monthlyDateNode}
+          <DateSummaryBox
+            onEventCallBack = {this.getMonthlyDateArr}
+            target_date = {yearMonth + "/" + "01"}
+            items = {this.state.items}
+            unit = "M"
         />
         </tbody>
       );
