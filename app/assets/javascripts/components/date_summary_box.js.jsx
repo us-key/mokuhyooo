@@ -80,7 +80,7 @@ var DateSummaryBox = React.createClass({
     });
   },
   sendTargetDate(e) {
-    this.props.onEventCallBack(this.props.target_date.substr(0,7));
+    this.props.onEventCallBack(e, this.props.target_date.substr(0,7));
     return;
   },
   render () {

@@ -99,48 +99,15 @@ var DateItemBox = React.createClass({
       dom.height(dom.height() - Number(dom.css("lineHeight").split("px")[0])+1);
       dom.height(item.scrollHeight+1);
       this.setState({inputHeight: dom.height()});
-      // var lineHeight = Number(dom.css("lineHeight").split("px")[0]);
-      // while (true){
-      //   dom.height(dom.height() - lineHeight);
-      //   if(item.scrollHeight > item.offsetHeight){
-      //     dom.height(item.scrollHeight+1);
-      //     this.setState({inputHeight: dom.height()});
-      //     break;
-      //   }
-      // }
     }
   },
   onChangeHour(e) {
     e.preventDefault;
     this.calcMin(e.target.value, this.state.base_minute);
-    // if (e.target.value) {
-    //   this.setState({
-    //     base_hour: parseInt(e.target.value),
-    //     item_value: parseInt(this.state.base_minute) + e.target.value * 60
-    //   });
-    // } else {
-    //   this.setState({
-    //     base_hour: "",
-    //     item_value: ""
-    //   })
-    // }
   },
   onChangeMinute(e) {
     e.preventDefault;
     this.calcMin(this.state.base_hour, e.target.value);
-    // if (e.target.value) {
-    //   if (this.state.base_hour) {
-    //     this.setState({
-    //       base_minute: parseInt(e.target.value),
-    //       item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)
-    //     });
-    //   } else {
-    //     this.setState({
-    //       base_minute: parseInt(e.target.value),
-    //       item_value: parseInt(e.target.value)
-    //     });
-    //   } else {
-    //   }
     this.setState({
       base_minute: parseInt(e.target.value),
       item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)

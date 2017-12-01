@@ -91,8 +91,8 @@ var DateParentBox = React.createClass({
   },
   // 対象月1か月分の日付を算出し配列に詰める
   // targetYearMonth:YYYY/MM
-  getMonthlyDateArr(targetYearMonth) {
-    //e.preventDefault;
+  getMonthlyDateArr(e, targetYearMonth) {
+    e.preventDefault;
     console.log("getMonthlyDateArr:" + targetYearMonth);
     var newVal = this.state.yearlyMonthDateArr;
     var newDispVal = this.state.yearlyMonthDispArr;
