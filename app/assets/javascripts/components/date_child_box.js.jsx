@@ -108,6 +108,7 @@ var DateChildBox = React.createClass({
         />
       );
     });
+    var dateWithDayOfWeek = target_date + "(" + getDayOfWeek(target_date) + ")";
     return (
       <tr style={{"display":(this.props.disp ? "" : "none")}}>
         <th>
@@ -118,7 +119,7 @@ var DateChildBox = React.createClass({
                   onClick={e => this.onSubmit(e, this.state.com_id, this.state.comment)}>
             </span>
           </a>
-          {target_date}
+          {dateWithDayOfWeek}
         </th>
         {// 目標BOX
         }

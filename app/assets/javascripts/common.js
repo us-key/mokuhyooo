@@ -134,6 +134,14 @@ var formatDate = function (date, format) {
   return format;
 }
 
+/**
+ * 日付の曜日を取得する
+ * @param  {String} date 日付(YYYY/MM/DD)
+ */
+var getDayOfWeek = function (date) {
+  return '日月火水木金土'[new Date(date).getDay()];
+}
+
 var isReallyNaN = function (x) {
   return (x !== x);
 }
