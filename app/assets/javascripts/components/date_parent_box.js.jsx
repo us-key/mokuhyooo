@@ -257,6 +257,7 @@ var DateParentBox = React.createClass({
           items={items}
           showMsg={this.showMsg}
           disp={true}
+          selected_date_flg={data==this.props.source_date}
         />
       )
     }.bind(this));

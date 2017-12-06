@@ -352,44 +352,57 @@ label.control-label {
   width: -moz-max-content;
   width: max-content;
 }
+.sticky-table > thead > tr {
+  background: #ffffff;
+}
 .sticky-table > thead > tr > th,
 .sticky-table > thead > tr > td {
 //  display: inline-block;
 //  width: 8.0rem;
-  background: #fff;
   font-size: 1.0rem;
 }
+
 .sticky-table > tbody > tr > th {
   position: -webkit-sticky;
   position: sticky;
   left: 0;
   z-index: 1;
 }
-.sticky-table > tbody > tr:nth-of-type(odd) > th {
-    background-color: #f9f9f9;
-}
-.sticky-table > tbody > tr:nth-of-type(even) > th {
+.sticky-table > tbody > tr:nth-of-type(even) {
     background-color: #ffffff;
+}
+// .sticky-table > tbody > tr:nth-of-type(odd) > th {
+//     background-color: inherit;
+// }
+// .sticky-table > tbody > tr:nth-of-type(even) > th {
+//     background-color: inherit;
+// }
+.sticky-table > tbody > tr > th {
+    background-color: inherit;
 }
 .sticky-table > thead {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  z-index: 2;
 }
 .sticky-table > thead > tr > th.btnCol {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 3;
+  z-index: 0;
+  background-color: inherit;
 }
 .sticky-table > thead > tr > th.dateCol {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   left: 10px;
-  z-index: 3;
+  z-index: 0;
+  background-color: inherit;
+}
+.sticky-table > thead > tr > td {
+  z-index: auto;
 }
 
 @media (min-width: 768px) {

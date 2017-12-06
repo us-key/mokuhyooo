@@ -17,7 +17,8 @@ var DateChildBox = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     if ((this.props.target_date != nextProps.target_date)
-        || this.props.items != nextProps.items) {
+        || this.props.items != nextProps.items
+        || this.props.selected_date_flg != nextProps.selected_date_flg) {
       this.getItemValues(nextProps.target_date);
     }
   },
@@ -110,7 +111,10 @@ var DateChildBox = React.createClass({
     });
     var dateWithDayOfWeek = target_date + "(" + getDayOfWeek(target_date) + ")";
     return (
-      <tr style={{"display":(this.props.disp ? "" : "none")}}>
+      <tr style={{
+        "display":(this.props.disp ? "" : "none"),
+        "background-color":(this.props.selected_date_flg ? "#ffff00" : "")
+      }}>
         <th>
           <a>
             <span id="register"
