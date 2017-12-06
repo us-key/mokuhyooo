@@ -16,6 +16,10 @@ var IndexParent = React.createClass({
       }
     });
   },
+  onFocus(e) {
+    console.log('onFocus')
+    $('.bootstrap-datetimepicker-widget').css('left','');
+  },
   onBlur(e) {
     this.setState({
       source_date: e.target.value
@@ -26,15 +30,14 @@ var IndexParent = React.createClass({
       <div className="parent">
         <div className="pos-horizontal">
           <div className="form-group pos-center">
-            <div className="col-xs-1 col-sm-3"></div>
-            <label className="col-xs-3 col-sm-2 control-label">日付：</label>
-            <div className="col-xs-7 col-sm-4">
+            <div className="col-xs-2 col-sm-8 col-md-9">&nbsp;</div>
+            <div className="col-xs-10 col-sm-4 col-md-3">
               <input type="text" id="source_date"
-                     className='form-control datepicker'
+                     className='form-control header-date datepicker'
                      value={this.state.source_date}
+                     onFocus={this.onFocus}
                      onBlur={this.onBlur}/>
             </div>
-            <div className="col-xs-1 col-sm-3"></div>
           </div>
         </div>
         <FreewordParentBox

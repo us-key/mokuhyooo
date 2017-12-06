@@ -46,6 +46,11 @@ textarea {
   }
 }
 
+.pos-horizontal {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
 .pos-center-parent {
   width: 100%;
   position: relative;
@@ -318,6 +323,16 @@ label.control-label {
   text-align: right;
   vertical-align: middle;
   padding-right: 10px;
+}
+
+.header-date {
+  font-size: 40px;
+  height: 50px;
+  width: 220px;
+  text-align: right;
+  margin-left: auto;
+  color: #0000dd;
+  border-color: #ffffff;
 }
 
 /* sticky-table */
