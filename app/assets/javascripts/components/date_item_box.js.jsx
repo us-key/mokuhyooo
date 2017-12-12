@@ -108,10 +108,6 @@ var DateItemBox = React.createClass({
   onChangeMinute(e) {
     e.preventDefault;
     this.calcMin(this.state.base_hour, e.target.value);
-    this.setState({
-      base_minute: parseInt(e.target.value),
-      item_value: parseInt(this.state.base_hour) * 60 + parseInt(e.target.value)
-    });
   },
   calcMin(hour, minute) {
     if (!hour && !minute) {
@@ -122,16 +118,16 @@ var DateItemBox = React.createClass({
       });
       return;
     }
-    var base_hour;
-    var base_minute;
+    var base_hour = hour.toString();
+    var base_minute = minute.toString();
     var item_value = 0;
-    if (hour) {
+    if (base_hour) {
       base_hour = parseInt(hour);
       item_value += parseInt(base_hour) * 60;
     } else {
       base_hour = "";
     }
-    if (minute) {
+    if (base_minute) {
       base_minute = parseInt(minute);
       item_value += parseInt(base_minute);
     } else {
