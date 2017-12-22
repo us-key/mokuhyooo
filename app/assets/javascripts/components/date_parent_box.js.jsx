@@ -418,6 +418,7 @@ var DateParentBox = React.createClass({
                            onChange={() => {
                              var newState = this.state;
                              newState.qty_target_data.target_type = "SUM";
+                             newState.qty_target_data.default_zero_flg = false;
                              this.setState(newState);
                            }}/>
                     <label>平均</label>
@@ -464,7 +465,11 @@ var DateParentBox = React.createClass({
                 </div>
                 <div className="form-group">
                   <div className="col-sm-offset-2 col-sm-10" style={{"verticalAlign": "middle","paddingTop": "7px"}}>
-                    <div className="checkbox">
+                    <div className="checkbox"
+                         style={{
+                           "display": (this.state.qty_target_data.target_type == "SUM") ? "none" : ""
+                         }}
+                         >
                       <label>
                         <input type="checkbox"
                                checked={this.state.qty_target_data.default_zero_flg}
@@ -603,7 +608,7 @@ var DateParentBox = React.createClass({
         {// 数値目標入力モーダルダイアログ
         }
         {qtyTargetRegisterDialog}
-        {// モーダルダイアログおわり
+        {// 数値目標入力モーダルダイアログおわり
         }
         {// 月毎表示モーダルダイアログ
         }
