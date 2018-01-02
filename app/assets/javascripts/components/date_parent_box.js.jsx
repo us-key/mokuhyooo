@@ -39,6 +39,7 @@ var DateParentBox = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     this.getDate(this.getTargetDate(nextProps.source_date));
+    this.getYearlyMonthDate(getFirstDate(nextProps.source_date, "Y", false))
   },
   shouldComponentUpdate(nextProps, nextState) {
     // 週が変わった場合、rerender(componentWillReceicePropsで取得した週の日付で再描画)
