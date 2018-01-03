@@ -100,10 +100,14 @@ var DateSummaryBox = React.createClass({
       var header_arr = (items[key] ? items[key] : {"qt_id":"", "name":"", "type":"", "kind":"", "zero_flg":"", "decimal_flg":""});
       // 数値目標のタイプをDateItemBoxに設定する
       if (header_arr["kind"] == "TI" || header_arr["kind"] == "TD") {
+        var hour = item_arr["value"]/60|0;
+        if (hour.toString().length < 2) {
+          hour = ("00" + hour).substr(-2);
+        }
         return (
           // 時間・時刻：中央揃え
           <td style={{"textAlign":"center"}}>
-            {("00" + (item_arr["value"]/60|0)).substr(-2)}：{("00" + parseInt(item_arr["value"]%60)).substr(-2)}
+            {hour}：{("00" + parseInt(item_arr["value"]%60)).substr(-2)}
             <br/>
             {item_arr["percent"]}%
           </td>
