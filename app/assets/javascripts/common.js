@@ -68,6 +68,8 @@ var getFirstDate = function(source_date, unit, prev_flg) {
       return (dt.getFullYear() + "/01/01");
     case "M" :
       if (prev_flg) {
+        // 月末日付(31日など)の前月日付を求めると月が繰り上がる場合があるため、まず月初日付を求める
+        dt = new Date(source_date.slice(0,8) + "01"); // YYYY/MM/01
         dt = addDate(dt, -1, "MM");
       }
       return (dt.getFullYear() + "/" + ("0"+(dt.getMonth() + 1)).slice(-2) + "/01");
