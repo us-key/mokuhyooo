@@ -155,15 +155,6 @@ var FreeWordBox = React.createClass({
       dom.height(dom.height() - Number(dom.css("lineHeight").split("px")[0])+1);
       dom.height(item.scrollHeight+1);
       this.setState({inputHeight: dom.height()});
-      // var lineHeight = Number(dom.css("lineHeight").split("px")[0]);
-      // while (true){
-      //   dom.height(dom.height() - lineHeight);
-      //   if(item.scrollHeight > item.offsetHeight){
-      //     dom.height(item.scrollHeight+1);
-      //     this.setState({inputHeight: dom.height()});
-      //     break;
-      //   }
-      // }
     }
   },
   onClick(e, com_id, comment) {
@@ -242,29 +233,35 @@ var FreeWordBox = React.createClass({
       case "R" : panelTitle += "振り返り"; break;
       default : ;
     }
-    return(
-      <div className={headerPanelClass}>
-        <div className="panel-heading">
-          <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
-          <a>
-            <span id="register"
-                  className="glyphicon glyphicon-save"
-                  aria-hidden="true"
-                  onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>
-            </span>
-          </a>
-          <span className="register_msg">{this.state.message}</span>
-        </div>
-        <div id={panelId} className={panelClass}>
-          <textarea id={this.state.com_id}
-                    className="form-control freewordInput"
-                    value={this.state.comment}
-                    onChange={this.onChangeText}
-                    style={{height: this.state.inputHeight}}
-                    >
-          </textarea>
-        </div>
-      </div>
-    );
+    // switch(this.props.type) {
+    //   case "T" :
+        return(
+          <div className={headerPanelClass}>
+            <div className="panel-heading">
+              <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
+              <a>
+                <span id="register"
+                      className="glyphicon glyphicon-save"
+                      aria-hidden="true"
+                      onClick={e => this.onClick(e, this.state.com_id, this.state.comment)}>
+                </span>
+              </a>
+              <span className="register_msg">{this.state.message}</span>
+            </div>
+            <div id={panelId} className={panelClass}>
+              <textarea id={this.state.com_id}
+                        className="form-control freewordInput"
+                        value={this.state.comment}
+                        onChange={this.onChangeText}
+                        style={{height: this.state.inputHeight}}
+                        >
+              </textarea>
+            </div>
+          </div>
+        );
+      //   break;
+      // default :
+      //   return(<div/>);
+    // }
   }
 });
