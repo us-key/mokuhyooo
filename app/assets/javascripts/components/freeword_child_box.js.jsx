@@ -205,9 +205,9 @@ var FreeWordBox = React.createClass({
     const panelId = this.props.prefix + "_panel";
     var panelClass = "panel collapse";
     // 目標欄のみ開いて初期表示
-    // if ("T" == this.props.type) {
+    if ("T" == this.props.type) {
       panelClass += " in";
-    // }
+    }
     var headerPanelClass = "panel panel-";
     switch(this.props.unit) {
       case "Y" : headerPanelClass += "info"; break;
@@ -238,7 +238,10 @@ var FreeWordBox = React.createClass({
         return(
           <div className={headerPanelClass}>
             <div className="panel-heading">
-              <a data-toggle="collapse" href={toggleTarget}>{panelTitle}</a>
+              <a
+                data-toggle="collapse"
+                href={toggleTarget}
+              >{panelTitle}</a>
               <a>
                 <span id="register"
                       className="glyphicon glyphicon-save"
@@ -253,7 +256,10 @@ var FreeWordBox = React.createClass({
                         className="form-control freewordInput"
                         value={this.state.comment}
                         onChange={this.onChangeText}
-                        style={{height: this.state.inputHeight}}
+                        readOnly={"this" !== this.props.target}
+                        style={{
+                          height: this.state.inputHeight,
+                        }}
                         >
               </textarea>
             </div>
