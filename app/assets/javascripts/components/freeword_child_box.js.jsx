@@ -200,6 +200,17 @@ var FreeWordBox = React.createClass({
       }.bind(this)
     });
   },
+  onClickTitle(e, com_id, comment) {
+    e.preventDefault();
+    var itemNode = "textarea#" + this.state.com_id;
+    if (this.state.com_id != "") {
+      var item = $(itemNode)[0];
+      if (typeof item !== "undefined") {
+        this.changeHeight(item);
+        return;
+      }
+    }
+  },
   render() {
     const toggleTarget = "#" + this.props.prefix + "_panel";
     const panelId = this.props.prefix + "_panel";
@@ -241,6 +252,7 @@ var FreeWordBox = React.createClass({
               <a
                 data-toggle="collapse"
                 href={toggleTarget}
+                onClick={this.onClickTitle}
               >{panelTitle}</a>
               <a>
                 <span id="register"
